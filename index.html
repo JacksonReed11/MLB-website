@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>MLB Stat Leaders Profile</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      background-color: #001f3f; /* Navy blue-ish */
+      color: #ffffff;
+      font-family: Arial, sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      min-height: 100vh;
+    }
+    .container {
+      width: 80%;
+      max-width: 800px;
+      padding: 20px;
+    }
+    .profile {
+      display: flex;
+      align-items: center;
+      margin-bottom: 40px;
+    }
+    .profile-img {
+      width: 120px;
+      height: 120px;
+      border-radius: 50%;
+      overflow: hidden;
+      margin-right: 20px;
+      border: 3px solid #ffffff;
+    }
+    .profile-img img {
+      width: 100%;
+      height: auto;
+    }
+    .profile-name {
+      font-size: 2em;
+      font-weight: bold;
+    }
+    .stats {
+      text-align: center;
+    }
+    .stats h2 {
+      margin-bottom: 20px;
+      border-bottom: 2px solid #ffffff;
+      display: inline-block;
+      padding-bottom: 5px;
+    }
+    .stat-item {
+      font-size: 1.5em;
+      margin: 10px 0;
+    }
+    .stat-label {
+      font-weight: bold;
+      margin-right: 10px;
+    }
+    @media (max-width: 600px) {
+      .profile {
+        flex-direction: column;
+        align-items: center;
+      }
+      .profile-img {
+        margin-right: 0;
+        margin-bottom: 15px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="profile">
+      <div class="profile-img">
+        <img src="profile.png" alt="Profile Picture"> <!-- replace with your image filename -->
+      </div>
+      <div>
+        <div class="profile-name">Your Name Here</div>
+        <div>MLB Fan / Stat Tracker</div>
+      </div>
+    </div>
+
+    <div class="stats">
+      <h2>2025 MLB Stat Leaders</h2>
+      <div class="stat-item">
+        <span class="stat-label">Most Home Runs:</span> Cal Raleigh — 60
+      </div>
+      <div class="stat-item">
+        <span class="stat-label">Most RBIs:</span> Kyle Schwarber — 132
+     
