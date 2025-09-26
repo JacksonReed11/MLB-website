@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>MLB Stats & Standings</title>
+  <title>MLB Stats, Standings & Playoff Picture</title>
   <style>
     body {
       margin: 0;
@@ -11,13 +11,17 @@
       color: #ffffff;
       font-family: Arial, sans-serif;
       display: flex;
-      justify-content: flex-start;
+      justify-content: space-between;
       align-items: flex-start;
       min-height: 100vh;
     }
-    .sidebar {
+    .sidebar-left {
       margin: 20px;
-      width: 360px; /* adjust width if needed */
+      width: 360px; /* adjust width */
+    }
+    .sidebar-right {
+      margin: 20px;
+      width: 300px; /* adjust width */
     }
     .box {
       background-color: #ffffff;
@@ -36,7 +40,7 @@
       display: inline-block;
       padding-bottom: 5px;
     }
-    .stat-item, .standing-item {
+    .stat-item, .standing-item, .playoff-item {
       font-size: 1.1em;
       margin: 6px 0;
       text-align: left;
@@ -47,7 +51,7 @@
   </style>
 </head>
 <body>
-  <div class="sidebar">
+  <div class="sidebar-left">
     <div class="box" id="stats-box">
       <h2>2025 MLB Stat Leaders</h2>
       <div class="stat-item">
@@ -72,53 +76,79 @@
 
     <div class="box" id="standings-box">
       <h2>2025 MLB Standings</h2>
-      
+      <!-- AL East -->
       <div class="standing-item"><strong>AL East</strong></div>
-      <div class="standing-item">1. Toronto Blue Jays — 91-68</div>
-      <div class="standing-item">2. New York Yankees — 91-68</div>
-      <div class="standing-item">3. Boston Red Sox — 87-72</div>
-      <div class="standing-item">4. Tampa Bay Rays — 77-82</div>
-      <div class="standing-item">5. Baltimore Orioles — 75-84</div>
+      <div class="standing-item">Toronto Blue Jays — 91-68</div>
+      <div class="standing-item">New York Yankees — 91-68</div>
+      <div class="standing-item">Boston Red Sox — 87-72</div>
+      <div class="standing-item">Tampa Bay Rays — 77-82</div>
+      <div class="standing-item">Baltimore Orioles — 75-84</div>
       <br>
-      
+      <!-- AL Central -->
       <div class="standing-item"><strong>AL Central</strong></div>
-      <div class="standing-item">1. Cleveland Guardians — 86-73</div>
-      <div class="standing-item">2. Detroit Tigers — 86-73</div>
-      <div class="standing-item">3. Kansas City Royals — 80-79</div>
-      <div class="standing-item">4. Minnesota Twins — 69-90</div>
-      <div class="standing-item">5. Chicago White Sox — 58-101</div>
+      <div class="standing-item">Cleveland Guardians — 86-73</div>
+      <div class="standing-item">Detroit Tigers — 86-73</div>
+      <div class="standing-item">Kansas City Royals — 80-79</div>
+      <div class="standing-item">Minnesota Twins — 69-90</div>
+      <div class="standing-item">Chicago White Sox — 58-101</div>
       <br>
-
+      <!-- AL West -->
       <div class="standing-item"><strong>AL West</strong></div>
-      <div class="standing-item">1. Seattle Mariners — 90-69</div>
-      <div class="standing-item">2. Houston Astros — 85-74</div>
-      <div class="standing-item">3. Texas Rangers — 80-79</div>
-      <div class="standing-item">4. Oakland Athletics — 75-84</div>
-      <div class="standing-item">5. Los Angeles Angels — 71-88</div>
+      <div class="standing-item">Seattle Mariners — 90-69</div>
+      <div class="standing-item">Houston Astros — 85-74</div>
+      <div class="standing-item">Texas Rangers — 80-79</div>
+      <div class="standing-item">Oakland Athletics — 75-84</div>
+      <div class="standing-item">Los Angeles Angels — 71-88</div>
       <br>
 
+      <!-- NL East -->
       <div class="standing-item"><strong>NL East</strong></div>
-      <div class="standing-item">1. Philadelphia Phillies — 94-65</div>
-      <div class="standing-item">2. New York Mets — 82-77</div>
-      <div class="standing-item">3. Miami Marlins — 77-82</div>
-      <div class="standing-item">4. Atlanta Braves — 75-84</div>
-      <div class="standing-item">5. Washington Nationals — 65-94</div>
+      <div class="standing-item">Philadelphia Phillies — 94-65</div>
+      <div class in="standing-item">New York Mets — 82-77</div>
+      <div class="standing-item">Miami Marlins — 77-82</div>
+      <div class="standing-item">Atlanta Braves — 75-84</div>
+      <div class="standing-item">Washington Nationals — 65-94</div>
       <br>
-
+      <!-- NL Central -->
       <div class="standing-item"><strong>NL Central</strong></div>
-      <div class="standing-item">1. Milwaukee Brewers — 96-63</div>
-      <div class="standing-item">2. Chicago Cubs — 89-70</div>
-      <div class="standing-item">3. Cincinnati Reds — 81-78</div>
-      <div class="standing-item">4. St. Louis Cardinals — 78-81</div>
-      <div class="standing-item">5. Pittsburgh Pirates — 69-90</div>
+      <div class="standing-item">Milwaukee Brewers — 96-63</div>
+      <div class="standing-item">Chicago Cubs — 89-70</div>
+      <div class="standing-item">Cincinnati Reds — 81-78</div>
+      <div class="standing-item">St. Louis Cardinals — 78-81</div>
+      <div class="standing-item">Pittsburgh Pirates — 69-90</div>
       <br>
-
+      <!-- NL West -->
       <div class="standing-item"><strong>NL West</strong></div>
-      <div class="standing-item">1. Los Angeles Dodgers — 90-69</div>
-      <div class="standing-item">2. San Diego Padres — 87-72</div>
-      <div class="standing-item">3. Arizona Diamondbacks — 80-79</div>
-      <div class="standing-item">4. San Francisco Giants — 78-81</div>
-      <div class="standing-item">5. Colorado Rockies — 43-116</div>
+      <div class="standing-item">Los Angeles Dodgers — 90-69</div>
+      <div class="standing-item">San Diego Padres — 87-72</div>
+      <div class="standing-item">Arizona Diamondbacks — 80-79</div>
+      <div class="standing-item">San Francisco Giants — 78-81</div>
+      <div class="standing-item">Colorado Rockies — 43-116</div>
+    </div>
+  </div>
+
+  <div class="sidebar-right">
+    <div class="box" id="playoff-box">
+      <h2>2025 Playoff Picture</h2>
+      <div class="playoff-item"><strong>AL Playoff Teams (if season ended today):</strong></div>
+      <div class="playoff-item">Blue Jays (AL East)</div>
+      <div class="playoff-item">Mariners (AL West)</div>
+      <div class="playoff-item">Guardians (AL Central)</div>
+      <div class="playoff-item">Yankees (Wild Card)</div>
+      <div class="playoff-item">Red Sox (Wild Card)</div>
+      <div class="playoff-item">Tigers (Wild Card)</div>
+      <br>
+      <div class="playoff-item"><strong>NL Playoff Teams (if season ended today):</strong></div>
+      <div class="playoff-item">Brewers (NL Central)</div>
+      <div class="playoff-item">Phillies (NL East)</div>
+      <div class="playoff-item">Dodgers (NL West)</div>
+      <div class="playoff-item">Cubs (Wild Card)</div>
+      <div class="playoff-item">Padres (Wild Card)</div>
+      <div class="playoff-item">Mets (Wild Card)</div>
+      <br>
+      <div class="playoff-item"><strong>Tiebreaker Notes:</strong></div>
+      <div class="playoff-item">Blue Jays hold head-to-head over Yankees & Mariners. :contentReference[oaicite:2]{index=2}</div>
+      <div class="playoff-item">Guardians hold tiebreaker vs Tigers. :contentReference[oaicite:3]{index=3}</div>
     </div>
   </div>
 </body>
