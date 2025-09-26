@@ -2,50 +2,54 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>MLB Stat Leaders Profile</title>
+  <title>MLB Stats & Standings</title>
   <style>
     body {
       margin: 0;
       padding: 0;
-      background-color: #001f3f; /* Navy blue */
+      background-color: #001f3f; /* navy blue */
       color: #ffffff;
       font-family: Arial, sans-serif;
       display: flex;
-      justify-content: center;
+      justify-content: flex-start;
       align-items: flex-start;
       min-height: 100vh;
     }
-    .container {
-      width: 80%;
-      max-width: 800px;
-      padding: 20px;
-      text-align: center;
+    .sidebar {
+      margin: 20px;
+      width: 360px; /* adjust width if needed */
     }
-    h1 {
-      font-size: 2.5em;
+    .box {
+      background-color: #ffffff;
+      color: #001f3f;
+      border: 2px solid #ffffff;
+      border-radius: 8px;
+      padding: 20px;
       margin-bottom: 30px;
     }
-    .stats h2 {
-      margin-bottom: 20px;
-      border-bottom: 2px solid #ffffff;
+    .box h2 {
+      margin-top: 0;
+      margin-bottom: 15px;
+      font-size: 1.5em;
+      text-align: left;
+      border-bottom: 2px solid #001f3f;
       display: inline-block;
       padding-bottom: 5px;
     }
-    .stat-item {
-      font-size: 1.5em;
-      margin: 12px 0;
+    .stat-item, .standing-item {
+      font-size: 1.1em;
+      margin: 6px 0;
+      text-align: left;
     }
     .stat-label {
       font-weight: bold;
-      margin-right: 10px;
     }
   </style>
 </head>
 <body>
-  <div class="container">
-    <h1>2025 MLB Stat Leaders</h1>
-
-    <div class="stats">
+  <div class="sidebar">
+    <div class="box" id="stats-box">
+      <h2>2025 MLB Stat Leaders</h2>
       <div class="stat-item">
         <span class="stat-label">Most Home Runs:</span> Cal Raleigh — 60
       </div>
@@ -65,9 +69,57 @@
         <span class="stat-label">Lowest WHIP:</span> Tarik Skubal — 0.89
       </div>
     </div>
+
+    <div class="box" id="standings-box">
+      <h2>2025 MLB Standings</h2>
+      
+      <div class="standing-item"><strong>AL East</strong></div>
+      <div class="standing-item">1. Toronto Blue Jays — 91-68</div>
+      <div class="standing-item">2. New York Yankees — 91-68</div>
+      <div class="standing-item">3. Boston Red Sox — 87-72</div>
+      <div class="standing-item">4. Tampa Bay Rays — 77-82</div>
+      <div class="standing-item">5. Baltimore Orioles — 75-84</div>
+      <br>
+      
+      <div class="standing-item"><strong>AL Central</strong></div>
+      <div class="standing-item">1. Cleveland Guardians — 86-73</div>
+      <div class="standing-item">2. Detroit Tigers — 86-73</div>
+      <div class="standing-item">3. Kansas City Royals — 80-79</div>
+      <div class="standing-item">4. Minnesota Twins — 69-90</div>
+      <div class="standing-item">5. Chicago White Sox — 58-101</div>
+      <br>
+
+      <div class="standing-item"><strong>AL West</strong></div>
+      <div class="standing-item">1. Seattle Mariners — 90-69</div>
+      <div class="standing-item">2. Houston Astros — 85-74</div>
+      <div class="standing-item">3. Texas Rangers — 80-79</div>
+      <div class="standing-item">4. Oakland Athletics — 75-84</div>
+      <div class="standing-item">5. Los Angeles Angels — 71-88</div>
+      <br>
+
+      <div class="standing-item"><strong>NL East</strong></div>
+      <div class="standing-item">1. Philadelphia Phillies — 94-65</div>
+      <div class="standing-item">2. New York Mets — 82-77</div>
+      <div class="standing-item">3. Miami Marlins — 77-82</div>
+      <div class="standing-item">4. Atlanta Braves — 75-84</div>
+      <div class="standing-item">5. Washington Nationals — 65-94</div>
+      <br>
+
+      <div class="standing-item"><strong>NL Central</strong></div>
+      <div class="standing-item">1. Milwaukee Brewers — 96-63</div>
+      <div class="standing-item">2. Chicago Cubs — 89-70</div>
+      <div class="standing-item">3. Cincinnati Reds — 81-78</div>
+      <div class="standing-item">4. St. Louis Cardinals — 78-81</div>
+      <div class="standing-item">5. Pittsburgh Pirates — 69-90</div>
+      <br>
+
+      <div class="standing-item"><strong>NL West</strong></div>
+      <div class="standing-item">1. Los Angeles Dodgers — 90-69</div>
+      <div class="standing-item">2. San Diego Padres — 87-72</div>
+      <div class="standing-item">3. Arizona Diamondbacks — 80-79</div>
+      <div class="standing-item">4. San Francisco Giants — 78-81</div>
+      <div class="standing-item">5. Colorado Rockies — 43-116</div>
+    </div>
   </div>
 </body>
 </html>
-
-
-     
