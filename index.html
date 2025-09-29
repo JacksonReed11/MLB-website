@@ -1,180 +1,170 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
-<title>2025 MLB</title>
+<meta charset="UTF-8">
+<title>2025 MLB Dashboard</title>
 <style>
   body {
     margin: 0;
-    font-family: "Segoe UI", Arial, sans-serif;
-    background-color: #001f3f; /* Navy background */
-    color: #ffffff;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    padding: 30px;
-  }
-
-  h1 {
-    font-size: 3em;
-    margin-bottom: 30px;
+    background: #001f3f;
+    color: #fff;
+    font-family: Arial, sans-serif;
     text-align: center;
   }
-
-  .box {
-    width: 90%;
-    max-width: 700px;
-    background-color: #ffffff;
+  h1 { margin: 20px 0; }
+  .container { max-width: 900px; margin: auto; }
+  details {
+    background: #fff;
     color: #001f3f;
-    border-radius: 12px;
-    margin-bottom: 25px;
-    box-shadow: 0 6px 16px rgba(0,0,0,0.3);
-    overflow: hidden;
-  }
-
-  .box-header {
-    padding: 18px 20px;
+    border-radius: 8px;
+    margin: 12px 0;
+    padding: 10px;
     cursor: pointer;
-    font-size: 1.4em;
+  }
+  summary {
     font-weight: bold;
-    background-color: #003366;
-    color: #ffffff;
-    user-select: none;
+    font-size: 1.2em;
+    outline: none;
   }
-
-  .box-content {
-    display: none;
-    padding: 20px;
-    font-size: 1.1em;
-    line-height: 1.5;
-    text-align: center;
-  }
-
-  .division-title {
-    font-weight: bold;
-    margin-top: 12px;
-    text-transform: uppercase;
-    color: #003366;
-    text-align: left;
-  }
-
-  .stat-item, .standing-item {
-    margin: 4px 0;
-    text-align: left;
-  }
-
-  .bracket-img {
-    width: 100%;
-    height: auto;
-    border-radius: 8px;
-    margin-top: 10px;
-  }
-
-  .live-btn {
-    display: inline-block;
-    background-color: #003366;
-    color: #ffffff;
-    padding: 12px 20px;
-    border-radius: 8px;
-    text-decoration: none;
-    font-weight: bold;
-    transition: background-color 0.2s;
-  }
-
-  .live-btn:hover {
-    background-color: #001f3f;
-  }
-
-  @media (max-width: 700px) {
-    h1 { font-size: 2.4em; }
+  canvas {
+    background: #0a3d62;
+    display: block;
+    margin: 10px auto;
+    border: 3px solid #fff;
+    image-rendering: pixelated;
   }
 </style>
 </head>
 <body>
   <h1>2025 MLB</h1>
+  <div class="container">
 
-  <!-- Expandable Stat Leaders -->
-  <div class="box">
-    <div class="box-header" onclick="toggleBox(this)">2025 Stat Leaders</div>
-    <div class="box-content">
-      <div class="stat-item"><strong>Home Runs:</strong> Cal Raleigh — 60</div>
-      <div class="stat-item"><strong>RBIs:</strong> Kyle Schwarber — 132</div>
-      <div class="stat-item"><strong>Batting Avg:</strong> Aaron Judge — .330</div>
-      <div class="stat-item"><strong>Strikeouts (Pitcher):</strong> Garrett Crochet — 255</div>
-      <div class="stat-item"><strong>ERA:</strong> Paul Skenes — 1.97</div>
-      <div class="stat-item"><strong>WHIP:</strong> Tarik Skubal — 0.89</div>
-    </div>
-  </div>
+    <!-- Box 1 -->
+    <details><summary>Standings</summary>
+      <p>…your standings here…</p>
+    </details>
 
-  <!-- Expandable Standings -->
-  <div class="box">
-    <div class="box-header" onclick="toggleBox(this)">2025 Full Standings</div>
-    <div class="box-content">
-      <div class="division-title">AL East</div>
-      <div class="standing-item">Blue Jays — 95-67</div>
-      <div class="standing-item">Yankees — 94-68</div>
-      <div class="standing-item">Red Sox — 88-74</div>
-      <div class="standing-item">Rays — 77-85</div>
-      <div class="standing-item">Orioles — 75-87</div>
+    <!-- Box 2 -->
+    <details><summary>Stat Leaders</summary>
+      <p>…HR, RBI, AVG, ERA, K, WHIP leaders…</p>
+    </details>
 
-      <div class="division-title">AL Central</div>
-      <div class="standing-item">Tigers — 87-75</div>
-      <div class="standing-item">Guardians — 86-76</div>
-      <div class="standing-item">Royals — 82-80</div>
-      <div class="standing-item">Twins — 69-93</div>
-      <div class="standing-item">White Sox — 58-104</div>
+    <!-- Box 3 -->
+    <details><summary>Playoff Bracket</summary>
+      <p>…image or bracket info…</p>
+    </details>
 
-      <div class="division-title">AL West</div>
-      <div class="standing-item">Mariners — 91-71</div>
-      <div class="standing-item">Astros — 86-76</div>
-      <div class="standing-item">Rangers — 81-81</div>
-      <div class="standing-item">Athletics — 75-87</div>
-      <div class="standing-item">Angels — 71-91</div>
+    <!-- Box 4 -->
+    <details><summary>Live Scores</summary>
+      <p><a href="https://www.mlb.com/scores" target="_blank">View live MLB scores</a></p>
+    </details>
 
-      <div class="division-title">NL East</div>
-      <div class="standing-item">Phillies — 96-66</div>
-      <div class="standing-item">Mets — 84-78</div>
-      <div class="standing-item">Marlins — 80-82</div>
-      <div class="standing-item">Braves — 75-87</div>
-      <div class="standing-item">Nationals — 65-97</div>
+    <!-- Box 5: Baseball Game -->
+    <details open>
+      <summary>Baseball Game</summary>
+      <p>Up Arrow = Pitch &nbsp;|&nbsp; Spacebar = Swing</p>
+      <canvas id="game" width="500" height="300"></canvas>
+      <p id="scoreboard">Runs: 0 &nbsp; Outs: 0</p>
+    </details>
 
-      <div class="division-title">NL Central</div>
-      <div class="standing-item">Brewers — 96-66</div>
-      <div class="standing-item">Cubs — 92-70</div>
-      <div class="standing-item">Reds — 81-81</div>
-      <div class="standing-item">Cardinals — 78-84</div>
-      <div class="standing-item">Pirates — 69-93</div>
-
-      <div class="division-title">NL West</div>
-      <div class="standing-item">Dodgers — 89-73</div>
-      <div class="standing-item">Padres — 87-75</div>
-      <div class="standing-item">Diamondbacks — 80-82</div>
-      <div class="standing-item">Giants — 78-84</div>
-      <div class="standing-item">Rockies — 43-119</div>
-    </div>
-  </div>
-
-  <!-- Expandable Playoff Bracket -->
-  <div class="box">
-    <div class="box-header" onclick="toggleBox(this)">2025 MLB Playoff Bracket</div>
-    <div class="box-content">
-      <img src="playoff-bracket.jpg" alt="MLB Playoff Bracket" class="bracket-img">
-    </div>
-  </div>
-
-  <!-- Expandable Live Scores -->
-  <div class="box">
-    <div class="box-header" onclick="toggleBox(this)">Live Scores</div>
-    <div class="box-content">
-      <a href="https://www.mlb.com/scores" target="_blank" class="live-btn">Go to MLB Live Scores</a>
-    </div>
   </div>
 
 <script>
-  function toggleBox(header) {
-    const content = header.nextElementSibling;
-    content.style.display = content.style.display === "block" ? "none" : "block";
+const canvas = document.getElementById('game');
+const ctx = canvas.getContext('2d');
+
+let ball = null;
+let runs = 0;
+let outs = 0;
+let swinging = false;
+const batX = 440;
+const batY = 220;
+
+function resetBall() {
+  ball = {x:60, y:150, vx:4, vy: (Math.random()*2-1)*2, active:true};
+}
+
+function drawField(){
+  ctx.fillStyle = '#0a3d62';
+  ctx.fillRect(0,0,canvas.width,canvas.height);
+  ctx.fillStyle = '#3c6';
+  ctx.beginPath();
+  ctx.moveTo(250,150);
+  ctx.lineTo(500,300);
+  ctx.lineTo(0,300);
+  ctx.closePath();
+  ctx.fill();
+  // bases
+  ctx.fillStyle='#fff';
+  ctx.fillRect(245,145,10,10);
+  ctx.fillRect(400,250,10,10);
+  ctx.fillRect(250,280,10,10);
+  ctx.fillRect(100,250,10,10);
+}
+
+function drawBat(){
+  ctx.fillStyle='yellow';
+  ctx.fillRect(batX, batY-30, 8,60);
+}
+
+function drawBall(){
+  if(ball && ball.active){
+    ctx.fillStyle='white';
+    ctx.beginPath();
+    ctx.arc(ball.x,ball.y,6,0,Math.PI*2);
+    ctx.fill();
   }
+}
+
+function update(){
+  drawField();
+  drawBat();
+  if(ball && ball.active){
+    ball.x += ball.vx;
+    ball.y += ball.vy;
+    if(ball.x>batX && swinging){
+      const hitChance = Math.random();
+      if(hitChance > 0.4){ // hit
+        const result = Math.random();
+        if(result<0.1){ runs++; }      // home run
+        else if(result<0.6){ runs++; } // single/double simplified
+        // else triple: also count as a run for simplicity
+      } else {
+        outs++;
+      }
+      swinging = false;
+      ball.active=false;
+    }
+    if(ball.x>canvas.width+20){ // missed completely
+      outs++;
+      ball.active=false;
+    }
+  }
+  drawBall();
+  document.getElementById('scoreboard').textContent =
+      `Runs: ${runs}   Outs: ${outs}`;
+  if(outs>=3){
+    ctx.fillStyle='rgba(0,0,0,0.6)';
+    ctx.fillRect(0,0,canvas.width,canvas.height);
+    ctx.fillStyle='#fff';
+    ctx.font='30px Arial';
+    ctx.fillText('Game Over!',180,150);
+    ctx.fillText(`Final Score: ${runs}`,170,190);
+  }
+  requestAnimationFrame(update);
+}
+
+document.addEventListener('keydown',e=>{
+  if(outs>=3) return;
+  if(e.code==='ArrowUp' && (!ball || !ball.active)){
+    resetBall();
+  }
+  if(e.code==='Space'){
+    swinging=true;
+  }
+});
+
+update();
 </script>
 </body>
 </html>
