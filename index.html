@@ -47,6 +47,7 @@
     padding: 20px;
     font-size: 1.1em;
     line-height: 1.5;
+    text-align: center;
   }
 
   .division-title {
@@ -54,10 +55,12 @@
     margin-top: 12px;
     text-transform: uppercase;
     color: #003366;
+    text-align: left;
   }
 
   .stat-item, .standing-item {
     margin: 4px 0;
+    text-align: left;
   }
 
   .bracket-img {
@@ -65,6 +68,21 @@
     height: auto;
     border-radius: 8px;
     margin-top: 10px;
+  }
+
+  .live-btn {
+    display: inline-block;
+    background-color: #003366;
+    color: #ffffff;
+    padding: 12px 20px;
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: bold;
+    transition: background-color 0.2s;
+  }
+
+  .live-btn:hover {
+    background-color: #001f3f;
   }
 
   @media (max-width: 700px) {
@@ -140,7 +158,15 @@
   <div class="box">
     <div class="box-header" onclick="toggleBox(this)">2025 MLB Playoff Bracket</div>
     <div class="box-content">
-      <img src="https://img.mlbstatic.com/mlb-images/image/upload/t_16x9/t_w2208/v1759097244/mlb/bldlnproiaocpzyzlj6g.jpg" alt="MLB Playoff Bracket" class="bracket-img">
+      <img src="playoff-bracket.jpg" alt="MLB Playoff Bracket" class="bracket-img">
+    </div>
+  </div>
+
+  <!-- Expandable Live Scores -->
+  <div class="box">
+    <div class="box-header" onclick="toggleBox(this)">Live Scores</div>
+    <div class="box-content">
+      <a href="https://www.mlb.com/scores" target="_blank" class="live-btn">Go to MLB Live Scores</a>
     </div>
   </div>
 
