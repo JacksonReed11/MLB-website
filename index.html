@@ -16,7 +16,6 @@
       min-height: 100vh;
     }
 
-    /* Generic box styling */
     .box {
       background-color: #ffffff;
       color: #001f3f;
@@ -59,23 +58,23 @@
       color: #003366;
     }
 
-    /* Center logo styling */
     .center-logo {
       display: flex;
+      flex-direction: column;
       justify-content: center;
       align-items: center;
       margin-top: 40px;
     }
-    .center-logo img {
+    .center-logo img.mlb {
       max-width: 240px;
       height: auto;
       filter: drop-shadow(0 0 8px rgba(0,0,0,0.6));
+      margin-bottom: 40px;
     }
 
-    /* Right-side bracket box */
     .sidebar-right {
       margin: 30px;
-      width: 340px;
+      width: 420px;
       display: flex;
       justify-content: center;
     }
@@ -86,8 +85,7 @@
       box-shadow: 0 6px 16px rgba(0,0,0,0.25);
     }
 
-    /* Responsive */
-    @media (max-width: 900px) {
+    @media (max-width: 1100px) {
       body {
         flex-direction: column;
         align-items: center;
@@ -101,7 +99,6 @@
 </head>
 <body>
 
-  <!-- Left: Stats & Standings -->
   <div class="sidebar-left">
     <div class="box" id="stats-box">
       <h2>2025 MLB Stat Leaders</h2>
@@ -160,15 +157,13 @@
     </div>
   </div>
 
-  <!-- Center: MLB Logo -->
   <div class="center-logo">
-    <img src="mlb-logo.png" alt="MLB Logo">
+    <img src="mlb-logo.png" alt="MLB Logo" class="mlb">
   </div>
 
-  <!-- Right: Playoff Bracket Image -->
   <div class="sidebar-right">
     <div class="box bracket-box">
-      <img src="playoff-bracket.png" alt="2025 MLB Playoff Bracket">
+      <img src="playoff-bracket.jpg" alt="2025 MLB Playoff Bracket">
     </div>
   </div>
 
