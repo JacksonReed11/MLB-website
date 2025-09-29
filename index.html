@@ -60,7 +60,13 @@
     margin: 4px 0;
   }
 
-  /* Responsive */
+  .bracket-img {
+    width: 100%;
+    height: auto;
+    border-radius: 8px;
+    margin-top: 10px;
+  }
+
   @media (max-width: 700px) {
     h1 { font-size: 2.4em; }
   }
@@ -75,7 +81,7 @@
     <div class="box-content">
       <div class="stat-item"><strong>Home Runs:</strong> Cal Raleigh — 60</div>
       <div class="stat-item"><strong>RBIs:</strong> Kyle Schwarber — 132</div>
-      <div class="stat-item"><strong>Batting Avg:</strong> Aaron Judge — .331</div>
+      <div class="stat-item"><strong>Batting Avg:</strong> Aaron Judge — .330</div>
       <div class="stat-item"><strong>Strikeouts (Pitcher):</strong> Garrett Crochet — 255</div>
       <div class="stat-item"><strong>ERA:</strong> Paul Skenes — 1.97</div>
       <div class="stat-item"><strong>WHIP:</strong> Tarik Skubal — 0.89</div>
@@ -127,6 +133,14 @@
       <div class="standing-item">Diamondbacks — 80-82</div>
       <div class="standing-item">Giants — 78-84</div>
       <div class="standing-item">Rockies — 43-119</div>
+    </div>
+  </div>
+
+  <!-- Expandable Playoff Bracket -->
+  <div class="box">
+    <div class="box-header" onclick="toggleBox(this)">2025 MLB Playoff Bracket</div>
+    <div class="box-content">
+      <img src="https://img.mlbstatic.com/mlb-images/image/upload/t_16x9/t_w2208/v1759097244/mlb/bldlnproiaocpzyzlj6g.jpg" alt="MLB Playoff Bracket" class="bracket-img">
     </div>
   </div>
 
