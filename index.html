@@ -39,31 +39,17 @@
   <h1>2025 MLB</h1>
   <div class="container">
 
-    <!-- Box 1 -->
-    <details><summary>Standings</summary>
-      <p>…your standings here…</p>
-    </details>
+    <!-- Example boxes -->
+    <details><summary>Standings</summary><p>…standings…</p></details>
+    <details><summary>Stat Leaders</summary><p>…stat leaders…</p></details>
+    <details><summary>Playoff Bracket</summary><p>…playoff bracket…</p></details>
+    <details><summary>Live Scores</summary><p><a href="https://www.mlb.com/scores" target="_blank">View live scores</a></p></details>
 
-    <!-- Box 2 -->
-    <details><summary>Stat Leaders</summary>
-      <p>…HR, RBI, AVG, ERA, K, WHIP leaders…</p>
-    </details>
-
-    <!-- Box 3 -->
-    <details><summary>Playoff Bracket</summary>
-      <p>…image or bracket info…</p>
-    </details>
-
-    <!-- Box 4 -->
-    <details><summary>Live Scores</summary>
-      <p><a href="https://www.mlb.com/scores" target="_blank">View live MLB scores</a></p>
-    </details>
-
-    <!-- Box 5: Baseball Game -->
+    <!-- Baseball Game -->
     <details open>
       <summary>Baseball Game</summary>
       <p>Up Arrow = Pitch &nbsp;|&nbsp; Spacebar = Swing</p>
-      <canvas id="game" width="500" height="300"></canvas>
+      <canvas id="game" width="500" height="350"></canvas>
       <p id="scoreboard">Runs: 0 &nbsp; Outs: 0</p>
     </details>
 
@@ -77,34 +63,91 @@ let ball = null;
 let runs = 0;
 let outs = 0;
 let swinging = false;
-const batX = 440;
-const batY = 220;
+
+const homePlate = {x:250, y:250};
+const pitcher = {x:250, y:100};
 
 function resetBall() {
-  ball = {x:60, y:150, vx:4, vy: (Math.random()*2-1)*2, active:true};
+  ball = {x:pitcher.x, y:pitcher.y, vx:0, vy:4, active:true};
 }
 
-function drawField(){
+function drawDiamond(){
   ctx.fillStyle = '#0a3d62';
   ctx.fillRect(0,0,canvas.width,canvas.height);
+
+  // Grass infield
   ctx.fillStyle = '#3c6';
   ctx.beginPath();
-  ctx.moveTo(250,150);
-  ctx.lineTo(500,300);
-  ctx.lineTo(0,300);
+  ctx.moveTo(homePlate.x, homePlate.y);
+  ctx.lineTo(350,150);
+  ctx.lineTo(250,50);
+  ctx.lineTo(150,150);
   ctx.closePath();
   ctx.fill();
-  // bases
+
+  // Base paths (dirt)
+  ctx.strokeStyle='#d2b48c';
+  ctx.lineWidth=8;
+  ctx.beginPath();
+  ctx.moveTo(homePlate.x, homePlate.y);
+  ctx.lineTo(350,150);
+  ctx.lineTo(250,50);
+  ctx.lineTo(150,150);
+  ctx.closePath();
+  ctx.stroke();
+
+  // Bases
   ctx.fillStyle='#fff';
-  ctx.fillRect(245,145,10,10);
-  ctx.fillRect(400,250,10,10);
-  ctx.fillRect(250,280,10,10);
-  ctx.fillRect(100,250,10,10);
+  ctx.fillRect(245,45,10,10);   // 2B
+  ctx.fillRect(345,145,10,10);  // 1B
+  ctx.fillRect(145,145,10,10);  // 3B
+  ctx.fillRect(245,245,10,10);  // Home
 }
 
-function drawBat(){
-  ctx.fillStyle='yellow';
-  ctx.fillRect(batX, batY-30, 8,60);
+function drawStickBatter(){
+  // Body
+  ctx.strokeStyle = 'white';
+  ctx.lineWidth = 2;
+  const bx = homePlate.x + 40; // batter stands right of plate
+  const by = homePlate.y - 10;
+
+  // Head
+  ctx.beginPath();
+  ctx.arc(bx, by - 20, 8, 0, Math.PI*2);
+  ctx.stroke();
+
+  // Body line
+  ctx.beginPath();
+  ctx.moveTo(bx, by - 12);
+  ctx.lineTo(bx, by + 20);
+  ctx.stroke();
+
+  // Arms
+  ctx.beginPath();
+  ctx.moveTo(bx - 10, by);
+  ctx.lineTo(bx + 10, by);
+  ctx.stroke();
+
+  // Legs
+  ctx.beginPath();
+  ctx.moveTo(bx, by + 20);
+  ctx.lineTo(bx - 8, by + 35);
+  ctx.moveTo(bx, by + 20);
+  ctx.lineTo(bx + 8, by + 35);
+  ctx.stroke();
+
+  // Bat
+  ctx.strokeStyle = 'yellow';
+  ctx.lineWidth = 4;
+  ctx.beginPath();
+  if(swinging){
+    ctx.moveTo(bx, by - 20);
+    ctx.lineTo(bx + 25, by - 10); // swung forward
+  } else {
+    ctx.moveTo(bx - 10, by - 25);
+    ctx.lineTo(bx + 10, by - 40); // resting position
+  }
+  ctx.stroke();
 }
 
 function drawBall(){
@@ -117,40 +160,44 @@ function drawBall(){
 }
 
 function update(){
-  drawField();
-  drawBat();
+  drawDiamond();
+  drawStickBatter();
+
   if(ball && ball.active){
-    ball.x += ball.vx;
     ball.y += ball.vy;
-    if(ball.x>batX && swinging){
-      const hitChance = Math.random();
-      if(hitChance > 0.4){ // hit
-        const result = Math.random();
-        if(result<0.1){ runs++; }      // home run
-        else if(result<0.6){ runs++; } // single/double simplified
-        // else triple: also count as a run for simplicity
-      } else {
-        outs++;
-      }
-      swinging = false;
-      ball.active=false;
-    }
-    if(ball.x>canvas.width+20){ // missed completely
+    if(ball.y > homePlate.y - 10 && !swinging && ball.active){
+      // missed pitch = out
       outs++;
       ball.active=false;
     }
+    if(ball.y > homePlate.y - 10 && swinging){
+      // check hit
+      if(Math.random() > 0.35){
+        const result = Math.random();
+        if(result < 0.15) runs += 1;     // HR
+        else if(result < 0.7) runs += 1; // single/double simplified
+        // else triple counts as run
+      } else {
+        outs++;
+      }
+      ball.active=false;
+    }
   }
+
   drawBall();
+
   document.getElementById('scoreboard').textContent =
-      `Runs: ${runs}   Outs: ${outs}`;
-  if(outs>=3){
+    `Runs: ${runs}   Outs: ${outs}`;
+
+  if(outs >= 3){
     ctx.fillStyle='rgba(0,0,0,0.6)';
     ctx.fillRect(0,0,canvas.width,canvas.height);
     ctx.fillStyle='#fff';
     ctx.font='30px Arial';
-    ctx.fillText('Game Over!',180,150);
-    ctx.fillText(`Final Score: ${runs}`,170,190);
+    ctx.fillText('Game Over!',170,170);
+    ctx.fillText(`Final Score: ${runs}`,160,210);
   }
+
   requestAnimationFrame(update);
 }
 
@@ -160,7 +207,8 @@ document.addEventListener('keydown',e=>{
     resetBall();
   }
   if(e.code==='Space'){
-    swinging=true;
+    swinging = true;
+    setTimeout(()=>swinging=false,200); // brief swing animation
   }
 });
 
