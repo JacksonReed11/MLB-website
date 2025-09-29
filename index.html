@@ -2,9 +2,8 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>MLB Stats, Standings & Playoff Picture</title>
+  <title>MLB Stats & Standings</title>
   <style>
-    /* --- Base Styles --- */
     body {
       margin: 0;
       padding: 0;
@@ -17,23 +16,7 @@
       min-height: 100vh;
     }
 
-    h2 {
-      margin-top: 0;
-      margin-bottom: 15px;
-      font-size: 1.6em;
-      border-bottom: 2px solid #001f3f;
-      padding-bottom: 4px;
-      color: #001f3f;
-    }
-
-    /* --- Sidebar Layouts --- */
-    .sidebar-left,
-    .sidebar-right {
-      margin: 30px;
-      width: 340px;
-    }
-
-    /* --- Reusable Box --- */
+    /* Generic box styling */
     .box {
       background-color: #ffffff;
       color: #001f3f;
@@ -43,22 +26,30 @@
       box-shadow: 0 6px 16px rgba(0,0,0,0.25);
       transition: transform 0.2s, box-shadow 0.2s;
     }
-
     .box:hover {
       transform: translateY(-4px);
       box-shadow: 0 10px 24px rgba(0,0,0,0.35);
     }
 
+    .sidebar-left {
+      margin: 30px;
+      width: 340px;
+    }
+
     .stat-item,
-    .standing-item,
-    .playoff-item {
+    .standing-item {
       font-size: 1.1em;
       margin: 6px 0;
       text-align: left;
     }
 
-    .stat-label {
-      font-weight: bold;
+    h2 {
+      margin-top: 0;
+      margin-bottom: 15px;
+      font-size: 1.6em;
+      border-bottom: 2px solid #001f3f;
+      padding-bottom: 4px;
+      color: #001f3f;
     }
 
     .division-title {
@@ -68,33 +59,60 @@
       color: #003366;
     }
 
-    /* Responsive for smaller screens */
+    /* Center logo styling */
+    .center-logo {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin-top: 40px;
+    }
+    .center-logo img {
+      max-width: 240px;
+      height: auto;
+      filter: drop-shadow(0 0 8px rgba(0,0,0,0.6));
+    }
+
+    /* Right-side bracket box */
+    .sidebar-right {
+      margin: 30px;
+      width: 340px;
+      display: flex;
+      justify-content: center;
+    }
+    .bracket-box img {
+      width: 100%;
+      height: auto;
+      border-radius: 12px;
+      box-shadow: 0 6px 16px rgba(0,0,0,0.25);
+    }
+
+    /* Responsive */
     @media (max-width: 900px) {
       body {
         flex-direction: column;
         align-items: center;
       }
-      .sidebar-left, .sidebar-right {
+      .sidebar-left,
+      .sidebar-right {
         width: 90%;
       }
     }
   </style>
 </head>
 <body>
-  <!-- Left Side: Stats + Standings -->
+
+  <!-- Left: Stats & Standings -->
   <div class="sidebar-left">
-    <!-- Stat Leaders -->
     <div class="box" id="stats-box">
       <h2>2025 MLB Stat Leaders</h2>
-      <div class="stat-item"><span class="stat-label">Most Home Runs:</span> Cal Raleigh — 60</div>
-      <div class="stat-item"><span class="stat-label">Most RBIs:</span> Kyle Schwarber — 132</div>
-      <div class="stat-item"><span class="stat-label">Highest Batting Average:</span> Aaron Judge — .330</div>
-      <div class="stat-item"><span class="stat-label">Most Strikeouts (Pitchers):</span> Garrett Crochet — 255</div>
-      <div class="stat-item"><span class="stat-label">Lowest ERA:</span> Paul Skenes — 1.97</div>
-      <div class="stat-item"><span class="stat-label">Lowest WHIP:</span> Tarik Skubal — 0.89</div>
+      <div class="stat-item"><strong>Most Home Runs:</strong> Cal Raleigh — 60</div>
+      <div class="stat-item"><strong>Most RBIs:</strong> Kyle Schwarber — 132</div>
+      <div class="stat-item"><strong>Highest Batting Average:</strong> Aaron Judge — .330</div>
+      <div class="stat-item"><strong>Most Strikeouts (Pitchers):</strong> Garrett Crochet — 255</div>
+      <div class="stat-item"><strong>Lowest ERA:</strong> Paul Skenes — 1.97</div>
+      <div class="stat-item"><strong>Lowest WHIP:</strong> Tarik Skubal — 0.89</div>
     </div>
 
-    <!-- Full Standings -->
     <div class="box" id="standings-box">
       <h2>2025 MLB Standings</h2>
 
@@ -142,27 +160,17 @@
     </div>
   </div>
 
-  <!-- Right Side: Playoff Picture -->
+  <!-- Center: MLB Logo -->
+  <div class="center-logo">
+    <img src="mlb-logo.png" alt="MLB Logo">
+  </div>
+
+  <!-- Right: Playoff Bracket Image -->
   <div class="sidebar-right">
-    <div class="box" id="playoff-box">
-      <h2>2025 Playoff Picture</h2>
-
-      <div class="division-title">American League</div>
-      <div class="playoff-item">Blue Jays (AL East)</div>
-      <div class="playoff-item">Mariners (AL West)</div>
-      <div class="playoff-item">Guardians (AL Central)</div>
-      <div class="playoff-item">Yankees (Wild Card)</div>
-      <div class="playoff-item">Red Sox (Wild Card)</div>
-      <div class="playoff-item">Tigers (Wild Card)</div>
-
-      <div class="division-title">National League</div>
-      <div class="playoff-item">Brewers (NL Central)</div>
-      <div class="playoff-item">Phillies (NL East)</div>
-      <div class="playoff-item">Dodgers (NL West)</div>
-      <div class="playoff-item">Cubs (Wild Card)</div>
-      <div class="playoff-item">Padres (Wild Card)</div>
-      <div class="playoff-item">Mets (Wild Card)</div>
+    <div class="box bracket-box">
+      <img src="playoff-bracket.png" alt="2025 MLB Playoff Bracket">
     </div>
   </div>
+
 </body>
 </html>
