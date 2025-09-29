@@ -1,46 +1,140 @@
-<!-- Full Standings -->
-<div class="box" id="standings-box">
-  <h2>2025 MLB Standings</h2>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>2025 MLB</title>
+<style>
+  body {
+    margin: 0;
+    font-family: "Segoe UI", Arial, sans-serif;
+    background-color: #001f3f; /* Navy background */
+    color: #ffffff;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 30px;
+  }
 
-  <div class="division-title">AL East</div>
-  <div class="standing-item">Toronto Blue Jays — 95-67</div>
-  <div class="standing-item">New York Yankees — 94-68</div>
-  <div class="standing-item">Boston Red Sox — 88-74</div>
-  <div class="standing-item">Tampa Bay Rays — 77-85</div>
-  <div class="standing-item">Baltimore Orioles — 75-87</div>
+  h1 {
+    font-size: 3em;
+    margin-bottom: 30px;
+    text-align: center;
+  }
 
-  <div class="division-title">AL Central</div>
-  <div class="standing-item">Detroit Tigers — 87-75</div>
-  <div class="standing-item">Cleveland Guardians — 86-76</div>
-  <div class="standing-item">Kansas City Royals — 82-80</div>
-  <div class="standing-item">Minnesota Twins — 69-93</div>
-  <div class="standing-item">Chicago White Sox — 58-104</div>
+  .box {
+    width: 90%;
+    max-width: 700px;
+    background-color: #ffffff;
+    color: #001f3f;
+    border-radius: 12px;
+    margin-bottom: 25px;
+    box-shadow: 0 6px 16px rgba(0,0,0,0.3);
+    overflow: hidden;
+  }
 
-  <div class="division-title">AL West</div>
-  <div class="standing-item">Seattle Mariners — 91-71</div>
-  <div class="standing-item">Houston Astros — 86-76</div>
-  <div class="standing-item">Texas Rangers — 81-81</div>
-  <div class="standing-item">Oakland Athletics — 75-87</div>
-  <div class="standing-item">Los Angeles Angels — 71-91</div>
+  .box-header {
+    padding: 18px 20px;
+    cursor: pointer;
+    font-size: 1.4em;
+    font-weight: bold;
+    background-color: #003366;
+    color: #ffffff;
+    user-select: none;
+  }
 
-  <div class="division-title">NL East</div>
-  <div class="standing-item">Philadelphia Phillies — 96-66</div>
-  <div class="standing-item">New York Mets — 84-78</div>
-  <div class="standing-item">Miami Marlins — 80-82</div>
-  <div class="standing-item">Atlanta Braves — 75-87</div>
-  <div class="standing-item">Washington Nationals — 65-97</div>
+  .box-content {
+    display: none;
+    padding: 20px;
+    font-size: 1.1em;
+    line-height: 1.5;
+  }
 
-  <div class="division-title">NL Central</div>
-  <div class="standing-item">Milwaukee Brewers — 96-66</div>
-  <div class="standing-item">Chicago Cubs — 92-70</div>
-  <div class="standing-item">Cincinnati Reds — 81-81</div>
-  <div class="standing-item">St. Louis Cardinals — 78-84</div>
-  <div class="standing-item">Pittsburgh Pirates — 69-93</div>
+  .division-title {
+    font-weight: bold;
+    margin-top: 12px;
+    text-transform: uppercase;
+    color: #003366;
+  }
 
-  <div class="division-title">NL West</div>
-  <div class="standing-item">Los Angeles Dodgers — 89-73</div>
-  <div class="standing-item">San Diego Padres — 87-75</div>
-  <div class="standing-item">Arizona Diamondbacks — 80-82</div>
-  <div class="standing-item">San Francisco Giants — 78-84</div>
-  <div class="standing-item">Colorado Rockies — 43-119</div>
-</div>
+  .stat-item, .standing-item {
+    margin: 4px 0;
+  }
+
+  /* Responsive */
+  @media (max-width: 700px) {
+    h1 { font-size: 2.4em; }
+  }
+</style>
+</head>
+<body>
+  <h1>2025 MLB</h1>
+
+  <!-- Expandable Stat Leaders -->
+  <div class="box">
+    <div class="box-header" onclick="toggleBox(this)">2025 Stat Leaders</div>
+    <div class="box-content">
+      <div class="stat-item"><strong>Home Runs:</strong> Cal Raleigh — 60</div>
+      <div class="stat-item"><strong>RBIs:</strong> Kyle Schwarber — 132</div>
+      <div class="stat-item"><strong>Batting Avg:</strong> Aaron Judge — .331</div>
+      <div class="stat-item"><strong>Strikeouts (Pitcher):</strong> Garrett Crochet — 255</div>
+      <div class="stat-item"><strong>ERA:</strong> Paul Skenes — 1.97</div>
+      <div class="stat-item"><strong>WHIP:</strong> Tarik Skubal — 0.89</div>
+    </div>
+  </div>
+
+  <!-- Expandable Standings -->
+  <div class="box">
+    <div class="box-header" onclick="toggleBox(this)">2025 Full Standings</div>
+    <div class="box-content">
+      <div class="division-title">AL East</div>
+      <div class="standing-item">Blue Jays — 95-67</div>
+      <div class="standing-item">Yankees — 94-68</div>
+      <div class="standing-item">Red Sox — 88-74</div>
+      <div class="standing-item">Rays — 77-85</div>
+      <div class="standing-item">Orioles — 75-87</div>
+
+      <div class="division-title">AL Central</div>
+      <div class="standing-item">Tigers — 87-75</div>
+      <div class="standing-item">Guardians — 86-76</div>
+      <div class="standing-item">Royals — 82-80</div>
+      <div class="standing-item">Twins — 69-93</div>
+      <div class="standing-item">White Sox — 58-104</div>
+
+      <div class="division-title">AL West</div>
+      <div class="standing-item">Mariners — 91-71</div>
+      <div class="standing-item">Astros — 86-76</div>
+      <div class="standing-item">Rangers — 81-81</div>
+      <div class="standing-item">Athletics — 75-87</div>
+      <div class="standing-item">Angels — 71-91</div>
+
+      <div class="division-title">NL East</div>
+      <div class="standing-item">Phillies — 96-66</div>
+      <div class="standing-item">Mets — 84-78</div>
+      <div class="standing-item">Marlins — 80-82</div>
+      <div class="standing-item">Braves — 75-87</div>
+      <div class="standing-item">Nationals — 65-97</div>
+
+      <div class="division-title">NL Central</div>
+      <div class="standing-item">Brewers — 96-66</div>
+      <div class="standing-item">Cubs — 92-70</div>
+      <div class="standing-item">Reds — 81-81</div>
+      <div class="standing-item">Cardinals — 78-84</div>
+      <div class="standing-item">Pirates — 69-93</div>
+
+      <div class="division-title">NL West</div>
+      <div class="standing-item">Dodgers — 89-73</div>
+      <div class="standing-item">Padres — 87-75</div>
+      <div class="standing-item">Diamondbacks — 80-82</div>
+      <div class="standing-item">Giants — 78-84</div>
+      <div class="standing-item">Rockies — 43-119</div>
+    </div>
+  </div>
+
+<script>
+  function toggleBox(header) {
+    const content = header.nextElementSibling;
+    content.style.display = content.style.display === "block" ? "none" : "block";
+  }
+</script>
+</body>
+</html>
