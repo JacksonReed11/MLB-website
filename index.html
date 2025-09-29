@@ -174,7 +174,174 @@
   function toggleBox(header) {
     const content = header.nextElementSibling;
     content.style.display = content.style.display === "block" ? "none" : "block";
+    
+<!--Expandable Baseball Game-->
+  <summary>Baseball Game</summary>
+  <p>Up Arrow = Pitch &nbsp;|&nbsp; Spacebar = Swing</p>
+  <canvas id="game" width="500" height="350"></canvas>
+  <p id="scoreboard">Runs: 0 &nbsp; Outs: 0</p>
+</details>
+<script>
+(function(){
+  const canvas = document.getElementById('game');
+  if (!canvas) return; // if the game box isn’t present, skip
+  const ctx = canvas.getContext('2d');
+
+  let ball = null;
+  let runs = 0;
+  let outs = 0;
+  let swinging = false;
+
+  const homePlate = {x:250, y:250};
+  const pitcher   = {x:250, y:100};
+
+  function resetBall() {
+    ball = {x:pitcher.x, y:pitcher.y, vx:0, vy:4, active:true, hit:false};
   }
+
+  function drawDiamond(){
+    ctx.fillStyle = '#0a3d62';
+    ctx.fillRect(0,0,canvas.width,canvas.height);
+
+    // infield grass
+    ctx.fillStyle = '#3c6';
+    ctx.beginPath();
+    ctx.moveTo(homePlate.x, homePlate.y);
+    ctx.lineTo(350,150);
+    ctx.lineTo(250,50);
+    ctx.lineTo(150,150);
+    ctx.closePath();
+    ctx.fill();
+
+    // base paths
+    ctx.strokeStyle='#d2b48c';
+    ctx.lineWidth=8;
+    ctx.beginPath();
+    ctx.moveTo(homePlate.x, homePlate.y);
+    ctx.lineTo(350,150);
+    ctx.lineTo(250,50);
+    ctx.lineTo(150,150);
+    ctx.closePath();
+    ctx.stroke();
+
+    // bases
+    ctx.fillStyle='#fff';
+    [[245,45],[345,145],[145,145],[245,245]].forEach(([x,y])=>{
+      ctx.fillRect(x,y,10,10);
+    });
+  }
+
+  function drawBatter(){
+    const bx = homePlate.x + 40;
+    const by = homePlate.y - 10;
+    ctx.strokeStyle = 'white';
+    ctx.lineWidth = 2;
+
+    // head
+    ctx.beginPath();
+    ctx.arc(bx, by - 20, 8, 0, Math.PI*2);
+    ctx.stroke();
+
+    // body
+    ctx.beginPath();
+    ctx.moveTo(bx, by - 12);
+    ctx.lineTo(bx, by + 20);
+    ctx.stroke();
+
+    // arms
+    ctx.beginPath();
+    ctx.moveTo(bx - 10, by);
+    ctx.lineTo(bx + 10, by);
+    ctx.stroke();
+
+    // legs
+    ctx.beginPath();
+    ctx.moveTo(bx, by + 20);
+    ctx.lineTo(bx - 8, by + 35);
+    ctx.moveTo(bx, by + 20);
+    ctx.lineTo(bx + 8, by + 35);
+    ctx.stroke();
+
+    // bat
+    ctx.strokeStyle = 'yellow';
+    ctx.lineWidth = 4;
+    ctx.beginPath();
+    if(swinging){
+      ctx.moveTo(bx, by - 20);
+      ctx.lineTo(bx + 25, by - 10);
+    } else {
+      ctx.moveTo(bx - 10, by - 25);
+      ctx.lineTo(bx + 10, by - 40);
+    }
+    ctx.stroke();
+  }
+
+  function drawBall(){
+    if(ball && ball.active){
+      ctx.fillStyle='white';
+      ctx.beginPath();
+      ctx.arc(ball.x, ball.y, 6, 0, Math.PI*2);
+      ctx.fill();
+    }
+  }
+
+  function gameLoop(){
+    drawDiamond();
+    drawBatter();
+
+    if(ball && ball.active){
+      ball.x += ball.vx;
+      ball.y += ball.vy;
+
+      if(!ball.hit && ball.y > homePlate.y - 10 && !swinging){
+        outs++;
+        ball.active = false;
+      }
+
+      // if ball flies out top of screen after hit
+      if(ball.hit && ball.y + 6 < 0){
+        ball.active = false;
+      }
+    }
+
+    drawBall();
+
+    const sb = document.getElementById('scoreboard');
+    if (sb) sb.textContent = `Runs: ${runs}   Outs: ${outs}`;
+
+    if(outs < 3) requestAnimationFrame(gameLoop);
+    else {
+      ctx.fillStyle='rgba(0,0,0,0.6)';
+      ctx.fillRect(0,0,canvas.width,canvas.height);
+      ctx.fillStyle='#fff';
+      ctx.font='30px Arial';
+      ctx.fillText('Game Over!',170,170);
+      ctx.fillText(`Final Score: ${runs}`,160,210);
+    }
+  }
+
+  document.addEventListener('keydown', e => {
+    if(outs >= 3) return;
+    if(e.code === 'ArrowUp' && (!ball || !ball.active)) {
+      resetBall();
+    }
+    if(e.code === 'Space' && ball && ball.active && !ball.hit) {
+      swinging = true;
+      setTimeout(() => swinging = false, 200);
+
+      // If ball near plate when swinging, hit it straight up
+      if(ball.y > homePlate.y - 40 && ball.y < homePlate.y + 10){
+        ball.hit = true;
+        ball.vx = 0;                      // no sideways motion
+        ball.vy = -(6 + Math.random()*3); // straight up with random speed
+        runs++;
+      } else {
+        outs++;
+        ball.active = false;
+      }
+    }
+  });
+
+  gameLoop();
+})();
 </script>
-</body>
-</html>
