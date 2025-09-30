@@ -87,25 +87,10 @@
 
   /* Game Canvas */
   #game {
-    background:#0a3d62;
+    background:#228B22; /* Grass green */
     border:2px solid #003366;
     display:block;
     margin:20px auto;
-  }
-
-  /* Retro Scoreboard */
-  #scoreboard {
-    background-color: #111;
-    color: #0f0;
-    font-family: "Courier New", monospace;
-    font-size: 20px;
-    letter-spacing: 3px;
-    padding: 10px 20px;
-    margin-top: 10px;
-    border: 3px solid #0f0;
-    border-radius: 6px;
-    display: inline-block;
-    text-shadow: 0 0 5px #0f0;
   }
 
   @media (max-width: 700px) {
@@ -139,30 +124,35 @@
       <div class="standing-item">Red Sox — 88-74</div>
       <div class="standing-item">Rays — 77-85</div>
       <div class="standing-item">Orioles — 75-87</div>
+
       <div class="division-title">AL Central</div>
       <div class="standing-item">Tigers — 87-75</div>
       <div class="standing-item">Guardians — 86-76</div>
       <div class="standing-item">Royals — 82-80</div>
       <div class="standing-item">Twins — 69-93</div>
       <div class="standing-item">White Sox — 58-104</div>
+
       <div class="division-title">AL West</div>
       <div class="standing-item">Mariners — 91-71</div>
       <div class="standing-item">Astros — 86-76</div>
       <div class="standing-item">Rangers — 81-81</div>
       <div class="standing-item">Athletics — 75-87</div>
       <div class="standing-item">Angels — 71-91</div>
+
       <div class="division-title">NL East</div>
       <div class="standing-item">Phillies — 96-66</div>
       <div class="standing-item">Mets — 84-78</div>
       <div class="standing-item">Marlins — 80-82</div>
       <div class="standing-item">Braves — 75-87</div>
       <div class="standing-item">Nationals — 65-97</div>
+
       <div class="division-title">NL Central</div>
       <div class="standing-item">Brewers — 96-66</div>
       <div class="standing-item">Cubs — 92-70</div>
       <div class="standing-item">Reds — 81-81</div>
       <div class="standing-item">Cardinals — 78-84</div>
       <div class="standing-item">Pirates — 69-93</div>
+
       <div class="division-title">NL West</div>
       <div class="standing-item">Dodgers — 89-73</div>
       <div class="standing-item">Padres — 87-75</div>
@@ -193,8 +183,7 @@
     <div class="box-header" onclick="toggleBox(this)">Baseball Game</div>
     <div class="box-content">
       <p>Press <strong>.</strong> to pitch &nbsp;|&nbsp; Press <strong>Spacebar</strong> to swing</p>
-      <canvas id="game" width="500" height="350"></canvas>
-      <div id="scoreboard">RUNS: 0 &nbsp;&nbsp; OUTS: 0</div>
+      <canvas id="game" width="600" height="400"></canvas>
     </div>
   </div>
 
@@ -204,38 +193,44 @@
     content.style.display = content.style.display === "block" ? "none" : "block";
   }
 
-  // --- Simple Baseball Game ---
+  // --- Simple Baseball Game with Retro Scoreboard ---
   const canvas = document.getElementById('game');
   if(canvas){
     const ctx = canvas.getContext('2d');
-    const home = {x:250,y:260};
-    let ball=null, runs=0, outs=0, swinging=false;
+    const home = {x:300,y:300};
+    let ball=null, runs=0, outs=0, swinging=false, inning=1;
+    const innings = Array(9).fill(0); // Track runs per inning
 
     function resetBall(){
       const speed = 2 + Math.random()*4;
-      ball={x:250,y:80,vx:0,vy:speed,active:true,hit:false};
+      ball={x:300,y:100,vx:0,vy:speed,active:true,hit:false};
     }
 
     function drawDiamond(){
-      ctx.fillStyle='#0a3d62'; ctx.fillRect(0,0,500,350);
-      ctx.strokeStyle='#d2b48c'; ctx.lineWidth=8;
+      ctx.fillStyle='#228B22'; // Grass
+      ctx.fillRect(0,0,600,400);
+
+      // Brown diamond
+      ctx.strokeStyle='#d2b48c'; ctx.lineWidth=10;
       ctx.beginPath();
       ctx.moveTo(home.x,home.y);
-      ctx.lineTo(350,160); ctx.lineTo(250,60);
-      ctx.lineTo(150,160); ctx.closePath();
+      ctx.lineTo(400,200); ctx.lineTo(300,100);
+      ctx.lineTo(200,200); ctx.closePath();
       ctx.stroke();
+
+      // Bases
       ctx.fillStyle='#fff';
-      [[245,55],[345,155],[145,155],[245,255]].forEach(([x,y])=>ctx.fillRect(x,y,10,10));
+      [[295,95],[395,195],[195,195],[295,295]].forEach(([x,y])=>ctx.fillRect(x,y,10,10));
     }
 
     function drawBatter(){
-      const bx = home.x + 40, by = home.y - 10;
+      const bx = home.x + 50, by = home.y - 10;
       ctx.strokeStyle='white'; ctx.lineWidth=2;
-      ctx.beginPath(); ctx.arc(bx, by - 20, 8, 0, Math.PI*2); ctx.stroke();
-      ctx.beginPath(); ctx.moveTo(bx, by - 12); ctx.lineTo(bx, by + 20); ctx.stroke();
-      ctx.beginPath(); ctx.moveTo(bx - 10, by); ctx.lineTo(bx + 10, by); ctx.stroke();
+      ctx.beginPath(); ctx.arc(bx, by - 20, 8, 0, Math.PI*2); ctx.stroke(); // head
+      ctx.beginPath(); ctx.moveTo(bx, by - 12); ctx.lineTo(bx, by + 20); ctx.stroke(); // body
+      ctx.beginPath(); ctx.moveTo(bx - 10, by); ctx.lineTo(bx + 10, by); ctx.stroke(); // arms
       ctx.beginPath(); ctx.moveTo(bx, by + 20); ctx.lineTo(bx - 8, by + 35);
-      ctx.moveTo(bx, by + 20); ctx.lineTo(bx + 8, by + 35); ctx.stroke();
+      ctx.moveTo(bx, by + 20); ctx.lineTo(bx + 8, by + 35); ctx.stroke(); // legs
       ctx.strokeStyle='yellow'; ctx.lineWidth=4;
       ctx.beginPath();
       if(swinging){
@@ -257,6 +252,22 @@
       }
     }
 
+    function drawScoreboard(){
+      ctx.fillStyle = "#111";
+      ctx.fillRect(380, 10, 210, 80);
+      ctx.strokeStyle="#0f0"; ctx.strokeRect(380,10,210,80);
+
+      ctx.fillStyle="#0f0";
+      ctx.font="14px Courier New";
+      let header="INN 1 2 3 4 5 6 7 8 9  R  O";
+      ctx.fillText(header,390,30);
+
+      let line="     ";
+      for(let i=0;i<9;i++){ line+=innings[i]+" "; }
+      line+=runs+"  "+outs;
+      ctx.fillText(line,390,55);
+    }
+
     function loop(){
       drawDiamond();
       drawBatter();
@@ -265,34 +276,38 @@
         ball.y += ball.vy;
         if(!ball.hit && ball.y>home.y-10 && !swinging){
           outs++; ball.active=false;
+          if(outs>=3 && inning<9){ outs=0; inning++; }
         }
         if(ball.hit && ball.y < -10) ball.active=false;
       }
       drawBall();
-      document.getElementById('scoreboard').textContent=`RUNS: ${runs}     OUTS: ${outs}`;
-      if(outs<3) requestAnimationFrame(loop);
-      else{
-        ctx.fillStyle='rgba(0,0,0,0.6)';
-        ctx.fillRect(0,0,500,350);
+      drawScoreboard();
+
+      if(inning<=9) requestAnimationFrame(loop);
+      else {
+        ctx.fillStyle='rgba(0,0,0,0.7)';
+        ctx.fillRect(0,0,600,400);
         ctx.fillStyle='#fff';
         ctx.font='28px Arial';
-        ctx.fillText(`GAME OVER`,180,160);
-        ctx.fillText(`RUNS: ${runs}`,200,200);
+        ctx.fillText(`GAME OVER`,220,200);
+        ctx.fillText(`FINAL RUNS: ${runs}`,200,240);
       }
     }
 
     document.addEventListener('keydown', e=>{
-      if(outs>=3) return;
+      if(inning>9) return;
       if(e.key === '.' && (!ball || !ball.active)) resetBall();
       if(e.code === 'Space' && ball && ball.active && !ball.hit){
         swinging=true; setTimeout(()=>swinging=false,200);
-        if(ball.y>home.y-40 && ball.y<home.y+10 && Math.abs(ball.x-home.x)<50){
+        if(ball.y>home.y-40 && ball.y<home.y+10 && Math.abs(ball.x-home.x)<60){
           ball.hit=true;
           ball.vx = (Math.random()*2 - 1)*2;
           ball.vy = -(6 + Math.random()*3);
           runs++;
+          innings[inning-1]++;
         } else {
           outs++; ball.active=false;
+          if(outs>=3 && inning<9){ outs=0; inning++; }
         }
       }
     });
