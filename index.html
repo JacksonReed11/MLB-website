@@ -200,6 +200,7 @@
     const home = {x:300,y:300};
     let ball=null, runs=0, outs=0, swinging=false, inning=1;
     const innings = Array(3).fill(0); // Only 3 innings
+    let gameOver = false; // NEW flag
 
     function resetBall(){
       const speed = 2 + Math.random()*4;
@@ -271,20 +272,28 @@
     function loop(){
       drawDiamond();
       drawBatter();
-      if(ball && ball.active){
-        ball.x += ball.vx;
-        ball.y += ball.vy;
-        if(!ball.hit && ball.y>home.y-10 && !swinging){
-          outs++; ball.active=false;
-          if(outs>=3 && inning<3){ outs=0; inning++; }
+
+      if(!gameOver){
+        if(ball && ball.active){
+          ball.x += ball.vx;
+          ball.y += ball.vy;
+          if(!ball.hit && ball.y>home.y-10 && !swinging){
+            outs++; ball.active=false;
+            if(outs>=3){
+              if(inning < 3){ outs=0; inning++; }
+              else { gameOver=true; }
+            }
+          }
+          if(ball.hit && ball.y < -10) ball.active=false;
         }
-        if(ball.hit && ball.y < -10) ball.active=false;
       }
+
       drawBall();
       drawScoreboard();
 
-      if(inning<=3) requestAnimationFrame(loop);
-      else {
+      if(!gameOver){
+        requestAnimationFrame(loop);
+      } else {
         ctx.fillStyle='rgba(0,0,0,0.7)';
         ctx.fillRect(0,0,600,400);
         ctx.fillStyle='#fff';
@@ -295,7 +304,7 @@
     }
 
     document.addEventListener('keydown', e=>{
-      if(inning>3) return;
+      if(gameOver) return; // block input after game
       if(e.key === '.' && (!ball || !ball.active)) resetBall();
       if(e.code === 'Space' && ball && ball.active && !ball.hit){
         swinging=true; setTimeout(()=>swinging=false,200);
@@ -307,7 +316,10 @@
           innings[inning-1]++;
         } else {
           outs++; ball.active=false;
-          if(outs>=3 && inning<3){ outs=0; inning++; }
+          if(outs>=3){
+            if(inning < 3){ outs=0; inning++; }
+            else { gameOver=true; }
+          }
         }
       }
     });
