@@ -197,7 +197,9 @@
     let ball=null, runs=0, outs=0, swinging=false;
 
     function resetBall(){
-      ball={x:250,y:80,vx:0,vy:4,active:true,hit:false};
+      // random pitch speed between 2 and 6
+      const speed = 2 + Math.random()*4;
+      ball={x:250,y:80,vx:0,vy:speed,active:true,hit:false};
     }
 
     function drawDiamond(){
@@ -223,8 +225,9 @@
       ctx.strokeStyle='yellow'; ctx.lineWidth=4;
       ctx.beginPath();
       if(swinging){
+        // swing bat over the plate
         ctx.moveTo(bx, by - 20);
-        ctx.lineTo(bx + 25, by - 10);
+        ctx.lineTo(bx - 25, by - 10);
       } else {
         ctx.moveTo(bx - 10, by - 25);
         ctx.lineTo(bx + 10, by - 40);
@@ -269,10 +272,10 @@
       if(e.key === '.' && (!ball || !ball.active)) resetBall();
       if(e.code === 'Space' && ball && ball.active && !ball.hit){
         swinging=true; setTimeout(()=>swinging=false,200);
-        if(ball.y>home.y-40 && ball.y<home.y+10){
+        // check bat-ball contact (rough zone near home plate)
+        if(ball.y>home.y-40 && ball.y<home.y+10 && Math.abs(ball.x-home.x)<50){
           ball.hit=true;
-          // Random slight horizontal drift
-          ball.vx = (Math.random()*2 - 1)*2;
+          ball.vx = (Math.random()*2 - 1)*2; // drift
           ball.vy = -(6 + Math.random()*3);
           runs++;
         } else {
