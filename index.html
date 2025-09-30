@@ -93,6 +93,21 @@
     margin:20px auto;
   }
 
+  /* Retro Scoreboard */
+  #scoreboard {
+    background-color: #111;
+    color: #0f0;
+    font-family: "Courier New", monospace;
+    font-size: 20px;
+    letter-spacing: 3px;
+    padding: 10px 20px;
+    margin-top: 10px;
+    border: 3px solid #0f0;
+    border-radius: 6px;
+    display: inline-block;
+    text-shadow: 0 0 5px #0f0;
+  }
+
   @media (max-width: 700px) {
     h1 { font-size: 2.4em; }
   }
@@ -179,7 +194,7 @@
     <div class="box-content">
       <p>Press <strong>.</strong> to pitch &nbsp;|&nbsp; Press <strong>Spacebar</strong> to swing</p>
       <canvas id="game" width="500" height="350"></canvas>
-      <p id="scoreboard">Runs: 0 &nbsp; Outs: 0</p>
+      <div id="scoreboard">RUNS: 0 &nbsp;&nbsp; OUTS: 0</div>
     </div>
   </div>
 
@@ -197,7 +212,6 @@
     let ball=null, runs=0, outs=0, swinging=false;
 
     function resetBall(){
-      // random pitch speed between 2 and 6
       const speed = 2 + Math.random()*4;
       ball={x:250,y:80,vx:0,vy:speed,active:true,hit:false};
     }
@@ -217,15 +231,14 @@
     function drawBatter(){
       const bx = home.x + 40, by = home.y - 10;
       ctx.strokeStyle='white'; ctx.lineWidth=2;
-      ctx.beginPath(); ctx.arc(bx, by - 20, 8, 0, Math.PI*2); ctx.stroke(); // head
-      ctx.beginPath(); ctx.moveTo(bx, by - 12); ctx.lineTo(bx, by + 20); ctx.stroke(); // body
-      ctx.beginPath(); ctx.moveTo(bx - 10, by); ctx.lineTo(bx + 10, by); ctx.stroke(); // arms
+      ctx.beginPath(); ctx.arc(bx, by - 20, 8, 0, Math.PI*2); ctx.stroke();
+      ctx.beginPath(); ctx.moveTo(bx, by - 12); ctx.lineTo(bx, by + 20); ctx.stroke();
+      ctx.beginPath(); ctx.moveTo(bx - 10, by); ctx.lineTo(bx + 10, by); ctx.stroke();
       ctx.beginPath(); ctx.moveTo(bx, by + 20); ctx.lineTo(bx - 8, by + 35);
-      ctx.moveTo(bx, by + 20); ctx.lineTo(bx + 8, by + 35); ctx.stroke(); // legs
+      ctx.moveTo(bx, by + 20); ctx.lineTo(bx + 8, by + 35); ctx.stroke();
       ctx.strokeStyle='yellow'; ctx.lineWidth=4;
       ctx.beginPath();
       if(swinging){
-        // swing bat over the plate
         ctx.moveTo(bx, by - 20);
         ctx.lineTo(bx - 25, by - 10);
       } else {
@@ -256,14 +269,15 @@
         if(ball.hit && ball.y < -10) ball.active=false;
       }
       drawBall();
-      document.getElementById('scoreboard').textContent=`Runs: ${runs}   Outs: ${outs}`;
+      document.getElementById('scoreboard').textContent=`RUNS: ${runs}     OUTS: ${outs}`;
       if(outs<3) requestAnimationFrame(loop);
       else{
         ctx.fillStyle='rgba(0,0,0,0.6)';
         ctx.fillRect(0,0,500,350);
         ctx.fillStyle='#fff';
         ctx.font='28px Arial';
-        ctx.fillText(`Game Over - Runs: ${runs}`,120,180);
+        ctx.fillText(`GAME OVER`,180,160);
+        ctx.fillText(`RUNS: ${runs}`,200,200);
       }
     }
 
@@ -272,10 +286,9 @@
       if(e.key === '.' && (!ball || !ball.active)) resetBall();
       if(e.code === 'Space' && ball && ball.active && !ball.hit){
         swinging=true; setTimeout(()=>swinging=false,200);
-        // check bat-ball contact (rough zone near home plate)
         if(ball.y>home.y-40 && ball.y<home.y+10 && Math.abs(ball.x-home.x)<50){
           ball.hit=true;
-          ball.vx = (Math.random()*2 - 1)*2; // drift
+          ball.vx = (Math.random()*2 - 1)*2;
           ball.vy = -(6 + Math.random()*3);
           runs++;
         } else {
