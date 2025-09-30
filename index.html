@@ -50,6 +50,19 @@
     text-align: center;
   }
 
+  .division-title {
+    font-weight: bold;
+    margin-top: 12px;
+    text-transform: uppercase;
+    color: #003366;
+    text-align: left;
+  }
+
+  .stat-item, .standing-item {
+    margin: 4px 0;
+    text-align: left;
+  }
+
   .bracket-img {
     width: 100%;
     height: auto;
@@ -105,7 +118,42 @@
   <div class="box">
     <div class="box-header" onclick="toggleBox(this)">2025 Full Standings</div>
     <div class="box-content">
-      <!-- standings same as before -->
+      <div class="division-title">AL East</div>
+      <div class="standing-item">Blue Jays — 95-67</div>
+      <div class="standing-item">Yankees — 94-68</div>
+      <div class="standing-item">Red Sox — 88-74</div>
+      <div class="standing-item">Rays — 77-85</div>
+      <div class="standing-item">Orioles — 75-87</div>
+      <div class="division-title">AL Central</div>
+      <div class="standing-item">Tigers — 87-75</div>
+      <div class="standing-item">Guardians — 86-76</div>
+      <div class="standing-item">Royals — 82-80</div>
+      <div class="standing-item">Twins — 69-93</div>
+      <div class="standing-item">White Sox — 58-104</div>
+      <div class="division-title">AL West</div>
+      <div class="standing-item">Mariners — 91-71</div>
+      <div class="standing-item">Astros — 86-76</div>
+      <div class="standing-item">Rangers — 81-81</div>
+      <div class="standing-item">Athletics — 75-87</div>
+      <div class="standing-item">Angels — 71-91</div>
+      <div class="division-title">NL East</div>
+      <div class="standing-item">Phillies — 96-66</div>
+      <div class="standing-item">Mets — 84-78</div>
+      <div class="standing-item">Marlins — 80-82</div>
+      <div class="standing-item">Braves — 75-87</div>
+      <div class="standing-item">Nationals — 65-97</div>
+      <div class="division-title">NL Central</div>
+      <div class="standing-item">Brewers — 96-66</div>
+      <div class="standing-item">Cubs — 92-70</div>
+      <div class="standing-item">Reds — 81-81</div>
+      <div class="standing-item">Cardinals — 78-84</div>
+      <div class="standing-item">Pirates — 69-93</div>
+      <div class="division-title">NL West</div>
+      <div class="standing-item">Dodgers — 89-73</div>
+      <div class="standing-item">Padres — 87-75</div>
+      <div class="standing-item">Diamondbacks — 80-82</div>
+      <div class="standing-item">Giants — 78-84</div>
+      <div class="standing-item">Rockies — 43-119</div>
     </div>
   </div>
 
@@ -149,8 +197,9 @@
     let ball=null, runs=0, outs=0, swinging=false;
 
     function resetBall(){
-      const randomSpeed = 3 + Math.random()*3; // random speed 3–6
-      ball={x:250,y:80,vx:0,vy:randomSpeed,active:true,hit:false};
+      // random pitch speed between 2 and 6
+      const speed = 2 + Math.random()*4;
+      ball={x:250,y:80,vx:0,vy:speed,active:true,hit:false};
     }
 
     function drawDiamond(){
@@ -167,36 +216,21 @@
 
     function drawBatter(){
       const bx = home.x + 40, by = home.y - 10;
-
-      // Body
-      ctx.fillStyle = "#ffcc99"; // skin tone
-      ctx.beginPath(); ctx.arc(bx, by-28, 10, 0, Math.PI*2); ctx.fill(); // head
-
-      ctx.fillStyle = "#000"; 
-      ctx.fillRect(bx-6, by-18, 12, 28); // torso
-
-      ctx.fillStyle = "white";
-      ctx.fillRect(bx-6, by+10, 6, 20); // left leg
-      ctx.fillRect(bx, by+10, 6, 20);  // right leg
-
-      ctx.fillStyle = "#654321";
-      ctx.fillRect(bx-8, by+28, 10, 5); // left shoe
-      ctx.fillRect(bx+2, by+28, 10, 5); // right shoe
-
-      // Arms
-      ctx.strokeStyle="#ffcc99"; ctx.lineWidth=6;
-      ctx.beginPath();
-      ctx.moveTo(bx, by-10); ctx.lineTo(bx+20, by); // right arm
-      ctx.moveTo(bx, by-10); ctx.lineTo(bx-20, by); // left arm
-      ctx.stroke();
-
-      // Bat
-      ctx.strokeStyle="yellow"; ctx.lineWidth=5;
+      ctx.strokeStyle='white'; ctx.lineWidth=2;
+      ctx.beginPath(); ctx.arc(bx, by - 20, 8, 0, Math.PI*2); ctx.stroke(); // head
+      ctx.beginPath(); ctx.moveTo(bx, by - 12); ctx.lineTo(bx, by + 20); ctx.stroke(); // body
+      ctx.beginPath(); ctx.moveTo(bx - 10, by); ctx.lineTo(bx + 10, by); ctx.stroke(); // arms
+      ctx.beginPath(); ctx.moveTo(bx, by + 20); ctx.lineTo(bx - 8, by + 35);
+      ctx.moveTo(bx, by + 20); ctx.lineTo(bx + 8, by + 35); ctx.stroke(); // legs
+      ctx.strokeStyle='yellow'; ctx.lineWidth=4;
       ctx.beginPath();
       if(swinging){
-        ctx.moveTo(bx+15, by); ctx.lineTo(bx+40, by-10);
+        // swing bat over the plate
+        ctx.moveTo(bx, by - 20);
+        ctx.lineTo(bx - 25, by - 10);
       } else {
-        ctx.moveTo(bx+20, by-20); ctx.lineTo(bx+20, by+20);
+        ctx.moveTo(bx - 10, by - 25);
+        ctx.lineTo(bx + 10, by - 40);
       }
       ctx.stroke();
     }
@@ -238,9 +272,10 @@
       if(e.key === '.' && (!ball || !ball.active)) resetBall();
       if(e.code === 'Space' && ball && ball.active && !ball.hit){
         swinging=true; setTimeout(()=>swinging=false,200);
-        if(ball.y>home.y-40 && ball.y<home.y+10){
+        // check bat-ball contact (rough zone near home plate)
+        if(ball.y>home.y-40 && ball.y<home.y+10 && Math.abs(ball.x-home.x)<50){
           ball.hit=true;
-          ball.vx = (Math.random()*2 - 1)*2;
+          ball.vx = (Math.random()*2 - 1)*2; // drift
           ball.vy = -(6 + Math.random()*3);
           runs++;
         } else {
