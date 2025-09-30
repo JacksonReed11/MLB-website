@@ -199,7 +199,7 @@
     const ctx = canvas.getContext('2d');
     const home = {x:300,y:300};
     let ball=null, runs=0, outs=0, swinging=false, inning=1;
-    const innings = Array(9).fill(0); // Track runs per inning
+    const innings = Array(3).fill(0); // Only 3 innings
 
     function resetBall(){
       const speed = 2 + Math.random()*4;
@@ -253,17 +253,17 @@
     }
 
     function drawScoreboard(){
-      ctx.fillStyle = "#111";
+      ctx.fillStyle = "#001f3f"; // Solid navy blue scoreboard
       ctx.fillRect(380, 10, 210, 80);
-      ctx.strokeStyle="#0f0"; ctx.strokeRect(380,10,210,80);
+      ctx.strokeStyle="#fff"; ctx.strokeRect(380,10,210,80);
 
-      ctx.fillStyle="#0f0";
+      ctx.fillStyle="#fff";
       ctx.font="14px Courier New";
-      let header="INN 1 2 3 4 5 6 7 8 9  R  O";
+      let header="INN 1 2 3  R  O";
       ctx.fillText(header,390,30);
 
       let line="     ";
-      for(let i=0;i<9;i++){ line+=innings[i]+" "; }
+      for(let i=0;i<3;i++){ line+=innings[i]+" "; }
       line+=runs+"  "+outs;
       ctx.fillText(line,390,55);
     }
@@ -276,14 +276,14 @@
         ball.y += ball.vy;
         if(!ball.hit && ball.y>home.y-10 && !swinging){
           outs++; ball.active=false;
-          if(outs>=3 && inning<9){ outs=0; inning++; }
+          if(outs>=3 && inning<3){ outs=0; inning++; }
         }
         if(ball.hit && ball.y < -10) ball.active=false;
       }
       drawBall();
       drawScoreboard();
 
-      if(inning<=9) requestAnimationFrame(loop);
+      if(inning<=3) requestAnimationFrame(loop);
       else {
         ctx.fillStyle='rgba(0,0,0,0.7)';
         ctx.fillRect(0,0,600,400);
@@ -295,7 +295,7 @@
     }
 
     document.addEventListener('keydown', e=>{
-      if(inning>9) return;
+      if(inning>3) return;
       if(e.key === '.' && (!ball || !ball.active)) resetBall();
       if(e.code === 'Space' && ball && ball.active && !ball.hit){
         swinging=true; setTimeout(()=>swinging=false,200);
@@ -307,7 +307,7 @@
           innings[inning-1]++;
         } else {
           outs++; ball.active=false;
-          if(outs>=3 && inning<9){ outs=0; inning++; }
+          if(outs>=3 && inning<3){ outs=0; inning++; }
         }
       }
     });
