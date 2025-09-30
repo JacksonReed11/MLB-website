@@ -85,28 +85,12 @@
     background-color: #001f3f;
   }
 
-  canvas {
-    background-color: #2e8b57; /* green field */
-    display: block;
-    margin: 0 auto;
-    border: 2px solid #fff;
-    border-radius: 10px;
-  }
-
-  #resetBtn {
-    display: none;
-    margin-top: 15px;
-    padding: 10px 20px;
-    background: #003366;
-    color: #fff;
-    border: none;
-    border-radius: 8px;
-    font-size: 1em;
-    cursor: pointer;
-  }
-
-  #resetBtn:hover {
-    background: #001f3f;
+  /* Game Canvas */
+  #game {
+    background:#0a3d62;
+    border:2px solid #003366;
+    display:block;
+    margin:20px auto;
   }
 
   @media (max-width: 700px) {
@@ -140,35 +124,30 @@
       <div class="standing-item">Red Sox — 88-74</div>
       <div class="standing-item">Rays — 77-85</div>
       <div class="standing-item">Orioles — 75-87</div>
-
       <div class="division-title">AL Central</div>
       <div class="standing-item">Tigers — 87-75</div>
       <div class="standing-item">Guardians — 86-76</div>
       <div class="standing-item">Royals — 82-80</div>
       <div class="standing-item">Twins — 69-93</div>
       <div class="standing-item">White Sox — 58-104</div>
-
       <div class="division-title">AL West</div>
       <div class="standing-item">Mariners — 91-71</div>
       <div class="standing-item">Astros — 86-76</div>
       <div class="standing-item">Rangers — 81-81</div>
       <div class="standing-item">Athletics — 75-87</div>
       <div class="standing-item">Angels — 71-91</div>
-
       <div class="division-title">NL East</div>
       <div class="standing-item">Phillies — 96-66</div>
       <div class="standing-item">Mets — 84-78</div>
       <div class="standing-item">Marlins — 80-82</div>
       <div class="standing-item">Braves — 75-87</div>
       <div class="standing-item">Nationals — 65-97</div>
-
       <div class="division-title">NL Central</div>
       <div class="standing-item">Brewers — 96-66</div>
       <div class="standing-item">Cubs — 92-70</div>
       <div class="standing-item">Reds — 81-81</div>
       <div class="standing-item">Cardinals — 78-84</div>
       <div class="standing-item">Pirates — 69-93</div>
-
       <div class="division-title">NL West</div>
       <div class="standing-item">Dodgers — 89-73</div>
       <div class="standing-item">Padres — 87-75</div>
@@ -196,11 +175,11 @@
 
   <!-- Expandable Baseball Game -->
   <div class="box">
-    <div class="box-header" onclick="toggleBox(this)">Play Baseball Game</div>
+    <div class="box-header" onclick="toggleBox(this)">Baseball Game</div>
     <div class="box-content">
-      <canvas id="gameCanvas" width="600" height="400"></canvas>
-      <p>Press <b>.</b> to pitch and <b>Spacebar</b> to swing!</p>
-      <button id="resetBtn" onclick="resetGame()">Reset Game</button>
+      <p>Press <strong>.</strong> to pitch &nbsp;|&nbsp; Press <strong>Spacebar</strong> to swing</p>
+      <canvas id="game" width="500" height="350"></canvas>
+      <p id="scoreboard">Runs: 0 &nbsp; Outs: 0</p>
     </div>
   </div>
 
@@ -210,123 +189,100 @@
     content.style.display = content.style.display === "block" ? "none" : "block";
   }
 
-  const canvas = document.getElementById("gameCanvas");
-  const ctx = canvas.getContext("2d");
-  const resetBtn = document.getElementById("resetBtn");
+  // --- Simple Baseball Game ---
+  const canvas = document.getElementById('game');
+  if(canvas){
+    const ctx = canvas.getContext('2d');
+    const home = {x:250,y:260};
+    let ball=null, runs=0, outs=0, swinging=false;
 
-  let ball = null;
-  let batterSwing = false;
-  let runs = 0;
-  let outs = 0;
-  let gameOver = false;
+    function resetBall(){
+      ball={x:250,y:80,vx:0,vy:4,active:true,hit:false};
+    }
 
-  function drawDiamond() {
-    ctx.fillStyle = "#2e8b57";
-    ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-    ctx.fillStyle = "#fff";
-    ctx.beginPath();
-    ctx.moveTo(300, 350);
-    ctx.lineTo(250, 300);
-    ctx.lineTo(300, 250);
-    ctx.lineTo(350, 300);
-    ctx.closePath();
-    ctx.stroke();
-
-    ctx.fillRect(295, 345, 10, 10); // home
-    ctx.fillRect(245, 295, 10, 10); // 1st
-    ctx.fillRect(295, 245, 10, 10); // 2nd
-    ctx.fillRect(345, 295, 10, 10); // 3rd
-  }
-
-  function drawBatter() {
-    ctx.fillStyle = "black";
-    ctx.fillRect(280, 340, 5, 20);
-    ctx.beginPath();
-    ctx.arc(282, 335, 7, 0, Math.PI * 2);
-    ctx.fill();
-  }
-
-  function drawBall() {
-    if (ball) {
+    function drawDiamond(){
+      ctx.fillStyle='#0a3d62'; ctx.fillRect(0,0,500,350);
+      ctx.strokeStyle='#d2b48c'; ctx.lineWidth=8;
       ctx.beginPath();
-      ctx.arc(ball.x, ball.y, 6, 0, Math.PI * 2);
-      ctx.fillStyle = "white";
-      ctx.fill();
+      ctx.moveTo(home.x,home.y);
+      ctx.lineTo(350,160); ctx.lineTo(250,60);
+      ctx.lineTo(150,160); ctx.closePath();
+      ctx.stroke();
+      ctx.fillStyle='#fff';
+      [[245,55],[345,155],[145,155],[245,255]].forEach(([x,y])=>ctx.fillRect(x,y,10,10));
     }
-  }
 
-  function pitchBall() {
-    if (ball || gameOver) return;
-    ball = { x: 300, y: 200, dy: 3, dx: 0 };
-  }
-
-  function swingBat() {
-    if (!ball || gameOver) return;
-    if (ball.y > 320 && ball.y < 350) {
-      ball.dy = -4;
-      ball.dx = (Math.random() - 0.5) * 3;
-      runs++;
-      ball = null;
+    function drawBatter(){
+      const bx = home.x + 40, by = home.y - 10;
+      ctx.strokeStyle='white'; ctx.lineWidth=2;
+      ctx.beginPath(); ctx.arc(bx, by - 20, 8, 0, Math.PI*2); ctx.stroke(); // head
+      ctx.beginPath(); ctx.moveTo(bx, by - 12); ctx.lineTo(bx, by + 20); ctx.stroke(); // body
+      ctx.beginPath(); ctx.moveTo(bx - 10, by); ctx.lineTo(bx + 10, by); ctx.stroke(); // arms
+      ctx.beginPath(); ctx.moveTo(bx, by + 20); ctx.lineTo(bx - 8, by + 35);
+      ctx.moveTo(bx, by + 20); ctx.lineTo(bx + 8, by + 35); ctx.stroke(); // legs
+      ctx.strokeStyle='yellow'; ctx.lineWidth=4;
+      ctx.beginPath();
+      if(swinging){
+        ctx.moveTo(bx, by - 20);
+        ctx.lineTo(bx + 25, by - 10);
+      } else {
+        ctx.moveTo(bx - 10, by - 25);
+        ctx.lineTo(bx + 10, by - 40);
+      }
+      ctx.stroke();
     }
-  }
 
-  function checkGameOver() {
-    if (outs >= 3) {
-      gameOver = true;
-      resetBtn.style.display = "inline-block";
-    }
-  }
-
-  function resetGame() {
-    runs = 0;
-    outs = 0;
-    ball = null;
-    gameOver = false;
-    resetBtn.style.display = "none";
-  }
-
-  function update() {
-    if (ball) {
-      ball.y += ball.dy;
-      ball.x += ball.dx;
-
-      if (ball.y > canvas.height) {
-        outs++;
-        ball = null;
-        checkGameOver();
+    function drawBall(){
+      if(ball && ball.active){
+        ctx.fillStyle='white';
+        ctx.beginPath();
+        ctx.arc(ball.x, ball.y, 6, 0, Math.PI*2);
+        ctx.fill();
       }
     }
-  }
 
-  function draw() {
-    drawDiamond();
-    drawBatter();
-    drawBall();
-
-    ctx.fillStyle = "white";
-    ctx.font = "16px Arial";
-    ctx.fillText("Runs: " + runs, 20, 20);
-    ctx.fillText("Outs: " + outs, 20, 40);
-
-    if (gameOver) {
-      ctx.fillText("Game Over! Press Reset to play again.", 150, 200);
+    function loop(){
+      drawDiamond();
+      drawBatter();
+      if(ball && ball.active){
+        ball.x += ball.vx;
+        ball.y += ball.vy;
+        if(!ball.hit && ball.y>home.y-10 && !swinging){
+          outs++; ball.active=false;
+        }
+        if(ball.hit && ball.y < -10) ball.active=false;
+      }
+      drawBall();
+      document.getElementById('scoreboard').textContent=`Runs: ${runs}   Outs: ${outs}`;
+      if(outs<3) requestAnimationFrame(loop);
+      else{
+        ctx.fillStyle='rgba(0,0,0,0.6)';
+        ctx.fillRect(0,0,500,350);
+        ctx.fillStyle='#fff';
+        ctx.font='28px Arial';
+        ctx.fillText(`Game Over - Runs: ${runs}`,120,180);
+      }
     }
+
+    document.addEventListener('keydown', e=>{
+      if(outs>=3) return;
+      if(e.key === '.' && (!ball || !ball.active)) resetBall();
+      if(e.code === 'Space' && ball && ball.active && !ball.hit){
+        swinging=true; setTimeout(()=>swinging=false,200);
+        if(ball.y>home.y-40 && ball.y<home.y+10){
+          ball.hit=true;
+          // Random slight horizontal drift
+          ball.vx = (Math.random()*2 - 1)*2;
+          ball.vy = -(6 + Math.random()*3);
+          runs++;
+        } else {
+          outs++; ball.active=false;
+        }
+      }
+    });
+
+    loop();
   }
-
-  function gameLoop() {
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-    update();
-    draw();
-    requestAnimationFrame(gameLoop);
-  }
-
-  document.addEventListener("keydown", (e) => {
-    if (e.key === ".") pitchBall();
-    if (e.code === "Space") swingBat();
-  });
-
-  gameLoop();
 </script>
 </body>
 </html>
