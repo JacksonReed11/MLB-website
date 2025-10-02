@@ -223,7 +223,8 @@
   }
 
   function resetBall(){
-    const speed = 2 + Math.random()*4;
+    // Faster pitch speeds: 3 to 10 instead of 2 to 6
+    const speed = 3 + Math.random()*7;
     ball={x:300,y:100,vx:0,vy:speed,active:true,hit:false};
   }
 
