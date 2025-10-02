@@ -214,6 +214,7 @@
     let ball=null, runs=0, outs=0, swinging=false, inning=1;
     const innings = Array(3).fill(0);
     let pitchType = "";
+    let gameOver=false;
 
     function resetBall(){
       const types = [
@@ -289,6 +290,17 @@
       }
     }
 
+    function checkInningEnd(){
+      if(outs>=3){
+        if(inning<3){
+          outs=0;
+          inning++;
+        } else {
+          gameOver=true;
+        }
+      }
+    }
+
     function loop(){
       drawDiamond();
       drawBatter();
@@ -297,7 +309,7 @@
         ball.y += ball.vy;
         if(!ball.hit && ball.y>home.y-10 && !swinging){
           outs++; ball.active=false;
-          if(outs>=3 && inning<3){ outs=0; inning++; }
+          checkInningEnd();
         }
         if(ball.hit && ball.y < -10) ball.active=false;
       }
@@ -305,8 +317,9 @@
       drawScoreboard();
       drawPitchBox();
 
-      if(inning<=3) requestAnimationFrame(loop);
-      else {
+      if(!gameOver){
+        requestAnimationFrame(loop);
+      } else {
         ctx.fillStyle='rgba(0,0,0,0.7)';
         ctx.fillRect(0,0,600,400);
         ctx.fillStyle='#fff';
@@ -317,7 +330,7 @@
     }
 
     document.addEventListener('keydown', e=>{
-      if(inning>3) return;
+      if(gameOver) return;
       if(e.key === '.' && (!ball || !ball.active)) resetBall();
       if(e.code === 'Space' && ball && ball.active && !ball.hit){
         swinging=true; setTimeout(()=>swinging=false,200);
@@ -328,13 +341,13 @@
           runs++; innings[inning-1]++;
         } else {
           outs++; ball.active=false;
-          if(outs>=3 && inning<3){ outs=0; inning++; }
+          checkInningEnd();
         }
       }
     });
 
     function resetGame(){
-      runs=0; outs=0; inning=1;
+      runs=0; outs=0; inning=1; gameOver=false;
       for(let i=0;i<3;i++) innings[i]=0;
       ball=null; pitchType="";
       loop();
