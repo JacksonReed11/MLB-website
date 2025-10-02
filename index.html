@@ -14,13 +14,11 @@
     align-items: center;
     padding: 30px;
   }
-
   h1 {
     font-size: 3em;
     margin-bottom: 30px;
     text-align: center;
   }
-
   .box {
     width: 90%;
     max-width: 700px;
@@ -31,7 +29,6 @@
     box-shadow: 0 6px 16px rgba(0,0,0,0.3);
     overflow: hidden;
   }
-
   .box-header {
     padding: 18px 20px;
     cursor: pointer;
@@ -41,7 +38,6 @@
     color: #ffffff;
     user-select: none;
   }
-
   .box-content {
     display: none;
     padding: 20px;
@@ -49,7 +45,6 @@
     line-height: 1.5;
     text-align: center;
   }
-
   .division-title {
     font-weight: bold;
     margin-top: 12px;
@@ -57,19 +52,16 @@
     color: #003366;
     text-align: left;
   }
-
   .stat-item, .standing-item {
     margin: 4px 0;
     text-align: left;
   }
-
   .bracket-img {
     width: 100%;
     height: auto;
     border-radius: 8px;
     margin-top: 10px;
   }
-
   .live-btn {
     display: inline-block;
     background-color: #003366;
@@ -80,32 +72,27 @@
     font-weight: bold;
     transition: background-color 0.2s;
   }
-
   .live-btn:hover {
     background-color: #001f3f;
   }
-
-  /* Game Canvas */
-  #game {
-    background:#228B22; /* Grass green */
-    border:2px solid #003366;
-    display:block;
-    margin:20px auto;
+  canvas {
+    background-color: green; /* grass */
+    display: block;
+    margin-top: 30px;
+    border: 2px solid #fff;
   }
-
-  .reset-btn {
+  #resetBtn {
     margin-top: 10px;
     padding: 10px 20px;
-    background: #003366;
-    color: white;
+    font-weight: bold;
+    background-color: #003366;
+    color: #fff;
     border: none;
     border-radius: 6px;
     cursor: pointer;
-    font-weight: bold;
   }
-
-  .reset-btn:hover {
-    background: #001f3f;
+  #resetBtn:hover {
+    background-color: #001f3f;
   }
 </style>
 </head>
@@ -118,7 +105,7 @@
     <div class="box-content">
       <div class="stat-item"><strong>Home Runs:</strong> Cal Raleigh — 60</div>
       <div class="stat-item"><strong>RBIs:</strong> Kyle Schwarber — 132</div>
-      <div class="stat-item"><strong>Batting Avg:</strong> Aaron Judge — .331</div>
+      <div class="stat-item"><strong>Batting Avg:</strong> Aaron Judge — .330</div>
       <div class="stat-item"><strong>Strikeouts (Pitcher):</strong> Garrett Crochet — 255</div>
       <div class="stat-item"><strong>ERA:</strong> Paul Skenes — 1.97</div>
       <div class="stat-item"><strong>WHIP:</strong> Tarik Skubal — 0.89</div>
@@ -177,7 +164,7 @@
   <div class="box">
     <div class="box-header" onclick="toggleBox(this)">2025 MLB Playoff Bracket</div>
     <div class="box-content">
-      <img src="https://img.mlbstatic.com/mlb-images/image/upload/t_16x9/t_w2208/v1759097244/mlb/bldlnproiaocpzyzlj6g.jpg" alt="MLB Playoff Bracket" class="bracket-img">
+      <img src="playoff-bracket.jpg" alt="MLB Playoff Bracket" class="bracket-img">
     </div>
   </div>
 
@@ -189,16 +176,9 @@
     </div>
   </div>
 
-  <!-- Expandable Baseball Game -->
-  <div class="box">
-    <div class="box-header" onclick="toggleBox(this)">Baseball Game</div>
-    <div class="box-content">
-      <p>Press <strong>.</strong> to pitch &nbsp;|&nbsp; Press <strong>Spacebar</strong> to swing</p>
-      <canvas id="game" width="600" height="400"></canvas>
-      <br>
-      <button class="reset-btn" onclick="resetGame()">Reset Game</button>
-    </div>
-  </div>
+  <!-- Baseball Game -->
+  <canvas id="gameCanvas" width="700" height="500"></canvas>
+  <button id="resetBtn" onclick="resetGame()">Reset Game</button>
 
 <script>
   function toggleBox(header) {
@@ -206,142 +186,178 @@
     content.style.display = content.style.display === "block" ? "none" : "block";
   }
 
-  // --- Baseball Game ---
-  const canvas = document.getElementById('game');
-  if(canvas){
-    const ctx = canvas.getContext('2d');
-    const home = {x:300,y:300};
-    let ball=null, runs=0, outs=0, swinging=false, inning=1;
-    const innings = Array(3).fill(0);
-    let pitchType = "";
+  const canvas = document.getElementById("gameCanvas");
+  const ctx = canvas.getContext("2d");
 
-    function resetBall(){
-      const types = [
-        {name:"Fastball", vx:0, speed:[7,10]}, 
-        {name:"Slider", vx:1, speed:[5,7]}, 
-        {name:"Changeup", vx:0, speed:[3,4]}, 
-        {name:"2-Seam", vx:-0.5, speed:[8,10]}
-      ];
-      const chosen = types[Math.floor(Math.random()*types.length)];
-      const speed = chosen.speed[0] + Math.random()*(chosen.speed[1]-chosen.speed[0]);
-      pitchType = chosen.name;
-      ball={x:300,y:100,vx:chosen.vx,vy:speed,active:true,hit:false};
-    }
+  let ball, batter, gameOver, outs, runs, inning, pitchTypeDisplay;
+  let bases = [false, false, false]; // [first, second, third]
 
-    function drawDiamond(){
-      ctx.fillStyle='#228B22'; ctx.fillRect(0,0,600,400);
-      ctx.strokeStyle='#d2b48c'; ctx.lineWidth=10;
-      ctx.beginPath();
-      ctx.moveTo(home.x,home.y);
-      ctx.lineTo(400,200); ctx.lineTo(300,100);
-      ctx.lineTo(200,200); ctx.closePath();
-      ctx.stroke();
-      ctx.fillStyle='#fff';
-      [[295,95],[395,195],[195,195],[295,295]].forEach(([x,y])=>ctx.fillRect(x,y,10,10));
-    }
-
-    function drawBatter(){
-      const bx = home.x + 50, by = home.y - 10;
-      ctx.strokeStyle='white'; ctx.lineWidth=2;
-      ctx.beginPath(); ctx.arc(bx, by - 20, 8, 0, Math.PI*2); ctx.stroke();
-      ctx.beginPath(); ctx.moveTo(bx, by - 12); ctx.lineTo(bx, by + 20); ctx.stroke();
-      ctx.beginPath(); ctx.moveTo(bx - 10, by); ctx.lineTo(bx + 10, by); ctx.stroke();
-      ctx.beginPath(); ctx.moveTo(bx, by + 20); ctx.lineTo(bx - 8, by + 35);
-      ctx.moveTo(bx, by + 20); ctx.lineTo(bx + 8, by + 35); ctx.stroke();
-      ctx.strokeStyle='yellow'; ctx.lineWidth=4;
-      ctx.beginPath();
-      if(swinging){
-        ctx.moveTo(bx, by - 20); ctx.lineTo(bx - 25, by - 10);
-      } else {
-        ctx.moveTo(bx - 10, by - 25); ctx.lineTo(bx + 10, by - 40);
-      }
-      ctx.stroke();
-    }
-
-    function drawBall(){
-      if(ball && ball.active){
-        ctx.fillStyle='white';
-        ctx.beginPath();
-        ctx.arc(ball.x, ball.y, 6, 0, Math.PI*2);
-        ctx.fill();
-      }
-    }
-
-    function drawScoreboard(){
-      ctx.fillStyle = "#001f3f";
-      ctx.fillRect(380, 10, 210, 80);
-      ctx.strokeStyle="#fff"; ctx.strokeRect(380,10,210,80);
-
-      ctx.fillStyle="#fff"; ctx.font="14px Courier New";
-      ctx.fillText("INN 1 2 3  R  O",390,30);
-      let line="     ";
-      for(let i=0;i<3;i++){ line+=innings[i]+" "; }
-      line+=runs+"  "+outs;
-      ctx.fillText(line,390,55);
-    }
-
-    function drawPitchBox(){
-      if(pitchType){
-        ctx.fillStyle="rgba(0,0,0,0.7)";
-        ctx.fillRect(10,10,120,30);
-        ctx.fillStyle="white"; ctx.font="14px Arial";
-        ctx.fillText("Pitch: "+pitchType,20,30);
-      }
-    }
-
-    function loop(){
-      drawDiamond();
-      drawBatter();
-      if(ball && ball.active){
-        ball.x += ball.vx;
-        ball.y += ball.vy;
-        if(!ball.hit && ball.y>home.y-10 && !swinging){
-          outs++; ball.active=false;
-          if(outs>=3 && inning<3){ outs=0; inning++; }
-        }
-        if(ball.hit && ball.y < -10) ball.active=false;
-      }
-      drawBall();
-      drawScoreboard();
-      drawPitchBox();
-
-      if(inning<=3) requestAnimationFrame(loop);
-      else {
-        ctx.fillStyle='rgba(0,0,0,0.7)';
-        ctx.fillRect(0,0,600,400);
-        ctx.fillStyle='#fff';
-        ctx.font='28px Arial';
-        ctx.fillText(`GAME OVER`,220,200);
-        ctx.fillText(`FINAL RUNS: ${runs}`,200,240);
-      }
-    }
-
-    document.addEventListener('keydown', e=>{
-      if(inning>3) return;
-      if(e.key === '.' && (!ball || !ball.active)) resetBall();
-      if(e.code === 'Space' && ball && ball.active && !ball.hit){
-        swinging=true; setTimeout(()=>swinging=false,200);
-        if(ball.y>home.y-40 && ball.y<home.y+10 && Math.abs(ball.x-home.x)<60){
-          ball.hit=true;
-          ball.vx = (Math.random()*2 - 1)*2;
-          ball.vy = -(6 + Math.random()*3);
-          runs++; innings[inning-1]++;
-        } else {
-          outs++; ball.active=false;
-          if(outs>=3 && inning<3){ outs=0; inning++; }
-        }
-      }
-    });
-
-    function resetGame(){
-      runs=0; outs=0; inning=1;
-      for(let i=0;i<3;i++) innings[i]=0;
-      ball=null; pitchType="";
-      loop();
-    }
-
-    loop();
+  function resetGame() {
+    ball = null;
+    batter = { swinging: false };
+    gameOver = false;
+    outs = 0;
+    runs = 0;
+    inning = 1;
+    bases = [false, false, false];
+    pitchTypeDisplay = "";
+    draw();
   }
+
+  function drawField() {
+    ctx.fillStyle = "green";
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+    // diamond
+    ctx.fillStyle = "saddlebrown";
+    ctx.beginPath();
+    ctx.moveTo(350, 150);
+    ctx.lineTo(450, 250);
+    ctx.lineTo(350, 350);
+    ctx.lineTo(250, 250);
+    ctx.closePath();
+    ctx.fill();
+
+    // bases
+    ctx.fillStyle = "white";
+    ctx.fillRect(345, 145, 10, 10); // 2nd
+    ctx.fillRect(445, 245, 10, 10); // 1st
+    ctx.fillRect(345, 345, 10, 10); // home
+    ctx.fillRect(245, 245, 10, 10); // 3rd
+
+    // base runners
+    ctx.fillStyle = "blue";
+    if (bases[0]) ctx.fillRect(447, 247, 6, 6); // 1st
+    if (bases[1]) ctx.fillRect(347, 147, 6, 6); // 2nd
+    if (bases[2]) ctx.fillRect(247, 247, 6, 6); // 3rd
+  }
+
+  function drawBatter() {
+    ctx.fillStyle = "black";
+    ctx.fillRect(330, 340, 40, 10); // body
+    ctx.fillRect(350, 320, 10, 20); // torso
+    ctx.beginPath();
+    ctx.arc(355, 310, 10, 0, Math.PI * 2); // head
+    ctx.fill();
+    if (batter.swinging) {
+      ctx.fillRect(360, 320, 40, 5); // bat
+    } else {
+      ctx.fillRect(365, 315, 5, 40);
+    }
+  }
+
+  function drawBall() {
+    if (!ball) return;
+    ctx.fillStyle = "white";
+    ctx.beginPath();
+    ctx.arc(ball.x, ball.y, 5, 0, Math.PI * 2);
+    ctx.fill();
+  }
+
+  function drawScoreboard() {
+    ctx.fillStyle = "#001f3f";
+    ctx.fillRect(550, 10, 140, 90);
+    ctx.fillStyle = "white";
+    ctx.font = "12px monospace";
+    ctx.fillText("Inning: " + inning, 560, 30);
+    ctx.fillText("Runs: " + runs, 560, 50);
+    ctx.fillText("Outs: " + outs, 560, 70);
+    ctx.fillText("Pitch: " + pitchTypeDisplay, 560, 90);
+  }
+
+  function throwPitch() {
+    if (ball || gameOver) return;
+    const types = [
+      { name: "Slider", speed: Math.random() * 2 + 5, drift: 1, delay: 30 },
+      { name: "Changeup", speed: Math.random() * 1 + 3, drift: 0, delay: 0 },
+      { name: "2-Seam", speed: Math.random() * 2 + 8, drift: -0.5, delay: 20 }
+    ];
+    const pitch = types[Math.floor(Math.random() * types.length)];
+    pitchTypeDisplay = pitch.name;
+    ball = { x: 350, y: 140, vx: 0, vy: pitch.speed, drift: pitch.drift, delay: pitch.delay };
+  }
+
+  function updateBall() {
+    if (!ball) return;
+    ball.y += ball.vy;
+    if (ball.delay <= 0) {
+      ball.x += ball.drift;
+    } else {
+      ball.delay--;
+    }
+
+    if (ball.y > 500) {
+      outs++;
+      ball = null;
+      if (outs >= 3 || inning > 3) gameOver = true;
+    }
+  }
+
+  function advanceBases(hitType) {
+    if (hitType === "HR") {
+      let scored = 1; // batter scores
+      bases.forEach(b => { if (b) scored++; });
+      runs += scored;
+      bases = [false, false, false];
+      return;
+    }
+    // move runners for singles/doubles
+    if (hitType === "2B") {
+      if (bases[2]) { runs++; bases[2] = false; }
+      if (bases[1]) { bases[2] = true; bases[1] = false; }
+      if (bases[0]) { bases[1] = true; bases[0] = false; }
+      bases[1] = true; // batter to 2nd
+    } else if (hitType === "1B") {
+      if (bases[2]) { runs++; bases[2] = false; }
+      if (bases[1]) { bases[2] = true; bases[1] = false; }
+      if (bases[0]) { bases[1] = true; bases[0] = false; }
+      bases[0] = true; // batter to 1st
+    }
+  }
+
+  function swingBat() {
+    batter.swinging = true;
+    if (ball && ball.y > 300 && ball.y < 360 && Math.abs(ball.x - 355) < 25) {
+      let timing = Math.abs(ball.y - 330);
+      let hitType = "1B";
+      if (timing < 5) hitType = "HR";
+      else if (timing < 15) hitType = "2B";
+      else hitType = "1B";
+      advanceBases(hitType);
+      ball = null;
+    } else if (ball) {
+      outs++;
+      ball = null;
+      if (outs >= 3 || inning > 3) gameOver = true;
+    }
+    setTimeout(() => (batter.swinging = false), 200);
+  }
+
+  function draw() {
+    drawField();
+    drawBatter();
+    drawBall();
+    drawScoreboard();
+    if (gameOver) {
+      ctx.fillStyle = "white";
+      ctx.font = "24px Arial";
+      ctx.fillText("Game Over!", 300, 250);
+    }
+  }
+
+  function gameLoop() {
+    updateBall();
+    draw();
+    requestAnimationFrame(gameLoop);
+  }
+
+  document.addEventListener("keydown", (e) => {
+    if (e.key === ".") throwPitch();
+    if (e.key === " ") swingBat();
+  });
+
+  resetGame();
+  gameLoop();
 </script>
 </body>
 </html>
