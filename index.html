@@ -218,15 +218,15 @@
 
     function resetBall(){
       const types = [
-        {name:"Fastball", vx:0, speed:[7,10]}, 
-        {name:"Slider", vx:1, speed:[5,7]}, 
-        {name:"Changeup", vx:0, speed:[3,4]}, 
-        {name:"2-Seam", vx:-0.5, speed:[8,10]}
+        {name:"Fastball", vx:0, speed:[7,10], driftStart:999}, 
+        {name:"Slider", vx:1, speed:[5,7], driftStart:10}, 
+        {name:"Changeup", vx:0, speed:[3,4], driftStart:999}, 
+        {name:"2-Seam", vx:-0.5, speed:[8,10], driftStart:20}
       ];
       const chosen = types[Math.floor(Math.random()*types.length)];
       const speed = chosen.speed[0] + Math.random()*(chosen.speed[1]-chosen.speed[0]);
       pitchType = chosen.name;
-      ball={x:300,y:100,vx:chosen.vx,vy:speed,active:true,hit:false,frames:0};
+      ball={x:300,y:100,vx:chosen.vx,vy:speed,active:true,hit:false,frames:0,driftStart:chosen.driftStart};
     }
 
     function drawDiamond(){
@@ -306,7 +306,7 @@
       drawBatter();
       if(ball && ball.active){
         ball.frames++;
-        if(ball.frames > 15){ // drift after ~15 frames
+        if(ball.frames > ball.driftStart){ 
           ball.x += ball.vx;
         }
         ball.y += ball.vy;
