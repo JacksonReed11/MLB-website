@@ -189,8 +189,7 @@
   const canvas = document.getElementById("gameCanvas");
   const ctx = canvas.getContext("2d");
 
-  let ball, batter, gameOver, outs, runs, inning, pitchTypeDisplay;
-  let bases = [false, false, false]; // [first, second, third]
+  let ball, batter, gameOver, outs, runs, inning, pitchTypeDisplay, pitchTimer;
 
   function resetGame() {
     ball = null;
@@ -199,7 +198,6 @@
     outs = 0;
     runs = 0;
     inning = 1;
-    bases = [false, false, false];
     pitchTypeDisplay = "";
     draw();
   }
@@ -224,12 +222,6 @@
     ctx.fillRect(445, 245, 10, 10); // 1st
     ctx.fillRect(345, 345, 10, 10); // home
     ctx.fillRect(245, 245, 10, 10); // 3rd
-
-    // base runners
-    ctx.fillStyle = "blue";
-    if (bases[0]) ctx.fillRect(447, 247, 6, 6); // 1st
-    if (bases[1]) ctx.fillRect(347, 147, 6, 6); // 2nd
-    if (bases[2]) ctx.fillRect(247, 247, 6, 6); // 3rd
   }
 
   function drawBatter() {
@@ -256,7 +248,7 @@
 
   function drawScoreboard() {
     ctx.fillStyle = "#001f3f";
-    ctx.fillRect(550, 10, 140, 90);
+    ctx.fillRect(550, 10, 140, 80);
     ctx.fillStyle = "white";
     ctx.font = "12px monospace";
     ctx.fillText("Inning: " + inning, 560, 30);
@@ -286,6 +278,7 @@
       ball.delay--;
     }
 
+    // check if missed
     if (ball.y > 500) {
       outs++;
       ball = null;
@@ -293,42 +286,11 @@
     }
   }
 
-  function advanceBases(hitType) {
-    if (hitType === "HR") {
-      let scored = 1; // batter scores
-      bases.forEach(b => { if (b) scored++; });
-      runs += scored;
-      bases = [false, false, false];
-      return;
-    }
-    // move runners for singles/doubles
-    if (hitType === "2B") {
-      if (bases[2]) { runs++; bases[2] = false; }
-      if (bases[1]) { bases[2] = true; bases[1] = false; }
-      if (bases[0]) { bases[1] = true; bases[0] = false; }
-      bases[1] = true; // batter to 2nd
-    } else if (hitType === "1B") {
-      if (bases[2]) { runs++; bases[2] = false; }
-      if (bases[1]) { bases[2] = true; bases[1] = false; }
-      if (bases[0]) { bases[1] = true; bases[0] = false; }
-      bases[0] = true; // batter to 1st
-    }
-  }
-
   function swingBat() {
     batter.swinging = true;
     if (ball && ball.y > 300 && ball.y < 360 && Math.abs(ball.x - 355) < 25) {
-      let timing = Math.abs(ball.y - 330);
-      let hitType = "1B";
-      if (timing < 5) hitType = "HR";
-      else if (timing < 15) hitType = "2B";
-      else hitType = "1B";
-      advanceBases(hitType);
+      runs++;
       ball = null;
-    } else if (ball) {
-      outs++;
-      ball = null;
-      if (outs >= 3 || inning > 3) gameOver = true;
     }
     setTimeout(() => (batter.swinging = false), 200);
   }
